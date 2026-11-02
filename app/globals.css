@@ -1,0 +1,1521 @@
+  /* The fonts are the files Google Fonts serves, kept here (SIL Open Font License; each file
+     carries its notice). The rupee is the only character outside Latin, so it comes from a
+     one-glyph file rather than each family's whole Latin Extended file. */
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/inter.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/inter-rupee.woff2) format('woff2'); unicode-range: U+20B9 }
+  /* Montserrat sets every heading on the page, as the client's design does; Fraunces is kept
+     for the menu's links, which are the bar's and stay as they were. */
+  @font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/montserrat.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD }
+  @font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/fraunces.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD }
+  @font-face { font-family: 'Saira'; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/saira-500.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00B7, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026 }
+  @font-face { font-family: 'Saira'; font-style: italic; font-weight: 800; font-display: swap; src: url(/fonts/saira-800-italic.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00B7, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026 }
+  /* Until the fonts arrive, the hero is set in fonts the phone already has, each scaled to take
+     the same room, so the button doesn't jump when the real ones land. Georgia and Arial cover
+     iPhone, Mac and Windows; Noto Serif and Roboto cover Android. */
+  @font-face { font-family: 'Fraunces Georgia'; font-weight: 100 900; src: local('Georgia Bold'), local('Georgia-Bold'); size-adjust: 73.88%; ascent-override: 132.65%; descent-override: 35.19%; line-gap-override: 0% }
+  @font-face { font-family: 'Fraunces Noto'; font-weight: 100 900; src: local('Noto Serif Bold'), local('NotoSerif-Bold'); size-adjust: 75.14%; ascent-override: 130.42%; descent-override: 34.6%; line-gap-override: 0% }
+  /* Arial Bold scaled to Montserrat's width — the headline's at 700, the section titles' at
+     600 — with Montserrat's own ascent (0.968em) and descent (0.251em). */
+  @font-face { font-family: 'Montserrat Arial'; font-weight: 100 650; src: local('Arial Bold'), local('Arial-BoldMT'); size-adjust: 107.83%; ascent-override: 89.77%; descent-override: 23.28%; line-gap-override: 0% }
+  @font-face { font-family: 'Montserrat Arial'; font-weight: 651 900; src: local('Arial Bold'), local('Arial-BoldMT'); size-adjust: 109.28%; ascent-override: 88.58%; descent-override: 22.97%; line-gap-override: 0% }
+  @font-face { font-family: 'Inter Arial'; font-weight: 100 500; src: local('Arial'), local('ArialMT'); size-adjust: 107.01%; ascent-override: 90.65%; descent-override: 22.43%; line-gap-override: 0% }
+  @font-face { font-family: 'Inter Arial'; font-weight: 600 900; src: local('Arial Bold'), local('Arial-BoldMT'); size-adjust: 100.79%; ascent-override: 96.24%; descent-override: 23.81%; line-gap-override: 0% }
+  @font-face { font-family: 'Inter Roboto'; font-weight: 100 900; src: local('Roboto'), local('Roboto-Regular'); size-adjust: 107.54%; ascent-override: 90.20%; descent-override: 22.32%; line-gap-override: 0% }
+
+  :root {
+    --ink: #141413;
+    --ink-2: #44423D;
+    --ink-3: #6E6C66;
+    --paper: #FFFFFF;
+    --chip: #F2F1EF;
+    --line: #DEDCD7;
+    /* The client's colours: lilac under every photo frame and the included list, lavender
+       for How booking works, and one indigo for whatever is on offer or can be pressed. */
+    --lilac: #E7E7FA;
+    --lavender: #C4C4FB;
+    --indigo: #4E4EFF;
+    --wash: #FCFCFB;
+
+    --head: 'Montserrat', 'Montserrat Arial', Arial, sans-serif;
+    --display: 'Fraunces', 'Fraunces Georgia', 'Fraunces Noto', Georgia, serif;
+    --body: 'Inter', 'Inter Arial', 'Inter Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mark: 'Saira', 'Arial Narrow', sans-serif;
+
+    --gutter: 64px;
+    --nav-h: 72px;
+    --offer-h: 40px;
+    --ease: cubic-bezier(0.65, 0, 0.35, 1);
+    /* Two curves borrowed from the reference build: a sharp in-out for anything that
+       slides or swaps, and an expo-out for anything that arrives. */
+    --ease-roll: cubic-bezier(0.76, 0, 0.24, 1);
+    --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box }
+  html { -webkit-text-size-adjust: 100% }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth }
+  }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 16px/1.5 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, p { margin: 0 }
+  img { display: block; max-width: none }
+  [id] { scroll-margin-top: var(--nav-h) }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 160ms ease, transform 160ms ease;
+  }
+  .btn:hover { background: #2B2A27 }
+  .btn:active { transform: translateY(1px) }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  /* ---------- loader ----------
+     The dark room before the lights come up. Never shown without scripting, because
+     nothing would be there to take it away. */
+  .loader {
+    /* How long one word takes to fill. The loader lifts on the last word's animationend,
+       not on a clock of its own, so the run below is the only timing it has: the last
+       word starts at 1300ms and is full at 2060ms after first paint. */
+    --fill-run: 760ms;
+    /* The lift: slow off the mark, fast through the middle, easing to a stop. */
+    --ease-lift: cubic-bezier(0.83, 0, 0.17, 1);
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-content: center;
+    background: var(--ink);
+  }
+  html:not(.js) .loader, html.no-loader .loader, .loader.is-gone { display: none }
+  body.is-loading { overflow: hidden }
+
+  /* ---- the exit ----
+     Not a fade. The words roll up out of their row one after another, then the room is
+     drawn up off the page like a curtain. The curtain's lower edge is a wide arc of the
+     same ink hanging below it, off screen until the lift starts; it trails the rise and
+     flattens as it goes, so the edge reads as cloth being pulled up, not a box sliding. */
+  .loader::after {
+    content: '';
+    position: absolute;
+    top: calc(100% - 1px);
+    left: -10%;
+    right: -10%;
+    height: 22vh;
+    background: inherit;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    transform-origin: 50% 0;
+  }
+  .loader.is-done {
+    translate: 0 calc(-100% - 22vh);
+    visibility: hidden;
+    transition: translate 1000ms var(--ease-lift) 180ms, visibility 0s linear 1180ms;
+  }
+  .loader.is-done::after { scale: 1 0; transition: scale 1000ms var(--ease-lift) 180ms }
+
+  /* The three words fill one after another, left to right, and that filling IS the
+     progress indicator — there is no separate bar. Each chip holds two copies of its
+     word: the dim one it starts as, and a lit one inside a panel that widens over it.
+     The whole run is CSS, so it starts at first paint without waiting for any script. */
+  .loader-row { display: flex; gap: 8px; justify-content: center; overflow: hidden; padding-block: 2px }
+  .loader-chip {
+    position: relative;
+    overflow: hidden;
+    padding: 11px 16px 9px;
+    border-radius: 999px;
+    background: #26251F;
+    font: italic 800 13px/1 var(--mark);
+    letter-spacing: 0.06em;
+    color: #8C8A83;
+    transition: translate 520ms var(--ease-roll) calc(var(--out, 0) * 60ms);
+  }
+  .loader-chip:nth-child(2) { --out: 1 }
+  .loader-chip:nth-child(3) { --out: 2 }
+  .loader.is-done .loader-chip { translate: 0 -150% }
+  .chip-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    /* width, not transform: the lit copy inside must stay put while this edge moves
+       across it, which is what reads as filling rather than sliding. */
+    width: 0;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    animation: chip-fill var(--fill-run) var(--ease-roll) var(--fill-at) forwards;
+  }
+  .chip-fill > span { display: block; padding: 11px 16px 9px; white-space: nowrap }
+  .loader-chip:nth-child(1) .chip-fill { --fill-at: 60ms }
+  .loader-chip:nth-child(2) .chip-fill { --fill-at: 680ms }
+  .loader-chip:nth-child(3) .chip-fill { --fill-at: 1300ms }
+  @keyframes chip-fill { from { width: 0 } to { width: 100% } }
+
+  /* ---------- nav ---------- */
+  .skip {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 30;
+    padding: 12px 18px;
+    border-radius: 4px;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    text-decoration: none;
+    translate: 0 -200%;
+  }
+  .skip:focus-visible { translate: none }
+
+  /* The bar keeps its slot in the flow at every scroll position, so nothing below it ever
+     jumps; what changes is its surface, drawn on ::before. At the top of the page that
+     surface is not painted at all, which lets the sky rise behind the links. Past the first
+     scroll the bar floats: the surface draws in to a short bar in the middle of the window,
+     square-cornered like every button and field on the page, holding only the mark and the
+     menu. The hero already carries "Check available slots", so the floating bar does not
+     say it again. Opening the menu grows the same surface downward to hold the list,
+     so the bar and the menu read as one thing.
+     ::before has a negative z-index so it sits behind every child whatever its own
+     positioning — .brand is in flow and .nav-links is absolute, and a surface at z-index 0
+     would land between them. */
+  .nav {
+    --float-w: 420px;   /* the floating bar's width: the mark, the menu and the booking button */
+    --float-gap: 8px;   /* the space left above and below it */
+    --float-pad: 12px;  /* the room inside it, either side of the mark and the button */
+    --float-x: max(var(--float-gap), calc(50% - var(--float-w) / 2));
+    /* Where the surface sits now, and the room inside it — read by the bar's padding and
+       by the menu below it, so the list always lines up under the mark. */
+    --sx: 0px;
+    --sy: 0px;
+    --bar-pad: var(--gutter);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-h);
+    padding: 0 calc(var(--sx) + var(--bar-pad));
+  }
+  .nav.is-float { --sx: var(--float-x); --sy: var(--float-gap); --bar-pad: var(--float-pad) }
+  .nav::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: var(--sy) var(--sx);
+    border-radius: 4px;
+    background: transparent;
+  }
+  .nav.is-float::before {
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+    backdrop-filter: blur(16px) saturate(1.6);
+    box-shadow: 0 0 0 1px rgba(20, 20, 19, 0.07), 0 14px 30px -16px rgba(20, 20, 19, 0.34);
+  }
+  /* Open, the surface reaches down past the bar by the menu's height (measured in
+     SiteHeader) and turns solid. Even at 97% the headline behind showed through the list as
+     a grey ghost, so the list is read against paper and nothing else. */
+  .nav.is-open::before {
+    bottom: calc(var(--sy) - var(--panel-h, 0px));
+    background: var(--paper);
+    box-shadow: 0 0 0 1px rgba(20, 20, 19, 0.07), 0 28px 56px -28px rgba(20, 20, 19, 0.45);
+  }
+
+  /* Only once the bar is live, so a reload partway down the page arrives already floating
+     instead of animating into it in front of the reader. */
+  .nav.is-live { transition: padding 560ms var(--ease-roll) }
+  .nav.is-live::before {
+    transition: inset 560ms var(--ease-roll), background-color 300ms ease, box-shadow 300ms ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav.is-live, .nav.is-live::before { transition: none }
+  }
+
+  /* ---------- the mark ----------
+     "G3" in a square. On hover, or keyboard focus, the square widens — a grid column going
+     from 0fr to 1fr, which animates to the word's own width — and the letters of STUDIO
+     rise into it one after another, each out of a one-line mask. Leaving, the letters drop
+     first and the square closes after them. */
+  .brand { display: flex; align-items: center; color: var(--ink); text-decoration: none }
+  .mark {
+    display: inline-grid;
+    grid-template-columns: auto 0fr;
+    align-items: center;
+    height: 40px;
+    padding-inline: 10px;
+    border-radius: 4px;
+    background: var(--ink);
+    color: var(--paper);
+    font: italic 800 17px/1 var(--mark);
+    letter-spacing: 0.03em;
+    transition: grid-template-columns 460ms var(--ease-roll) 120ms;
+  }
+  .mark-g3 { width: 20px; text-align: center }
+  .mark-more { min-width: 0; overflow: hidden }
+  .mark-word { display: flex; height: 1.15em; overflow: hidden; padding-left: 0.42em; line-height: 1.15 }
+  .mark-word span { display: block; translate: 0 115%; transition: translate 300ms var(--ease-roll) }
+  @media (hover: hover) {
+    .brand:hover .mark { grid-template-columns: auto 1fr; transition: grid-template-columns 520ms var(--ease-roll) }
+    .brand:hover .mark-word span { translate: none; transition: translate 560ms var(--ease-roll) calc(90ms + var(--i) * 34ms) }
+  }
+  .brand:focus-visible .mark { grid-template-columns: auto 1fr; transition: grid-template-columns 520ms var(--ease-roll) }
+  .brand:focus-visible .mark-word span { translate: none; transition: translate 560ms var(--ease-roll) calc(90ms + var(--i) * 34ms) }
+  @media (prefers-reduced-motion: reduce) {
+    .mark, .mark-word span { transition: none !important }
+  }
+
+  /* ---------- the links, inline across a wide page at the top ---------- */
+  .nav-links {
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-links a {
+    padding: 8px 0;
+    font: 500 14px/1 var(--body);
+    color: var(--ink-2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 160ms ease;
+  }
+  .nav-links a:hover { color: var(--ink) }
+  .nav-links a:hover .roll em,
+  .nav-links a:focus-visible .roll em { translate: 0 -100% }
+
+  /* ---------- the right-hand group ----------
+     Going into the float, the links and the number fade first and are then taken out of the
+     row in one unseen step, and the menu button comes in beside the booking button only
+     after that; coming back, the reverse. The booking button stays throughout, riding the
+     bar's right edge, so nothing else is ever seen sliding across the bar while it moves. */
+  .nav-act { display: flex; align-items: center }
+  .phone {
+    max-width: 200px;
+    margin-right: 11px;
+    overflow: hidden;
+    white-space: nowrap;
+    font: 400 14px/1 var(--body);
+    color: var(--ink-2);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .phone:hover { color: var(--ink) }
+  .btn-nav { height: 44px; margin-left: 8px; padding: 0 20px; font-size: 14px; white-space: nowrap }
+
+  .nav.is-live :is(.nav-links, .phone) {
+    transition: opacity 260ms ease 300ms, visibility 0s linear 300ms,
+                max-width 0s linear 150ms, margin 0s linear 150ms;
+  }
+  .nav.is-float :is(.nav-links, .phone) {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 150ms ease, visibility 0s linear 150ms,
+                max-width 0s linear 150ms, margin 0s linear 150ms;
+  }
+  .nav.is-float .phone { max-width: 0; margin-inline: 0 }
+
+  /* ---------- the menu button ---------- */
+  .menu-btn {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: color 300ms var(--ease-roll), border-color 300ms var(--ease-roll);
+  }
+  /* Ink rises up the button from its bottom edge — the loader's words fill the same way —
+     and stays while the menu is open, so the open state is never in doubt. */
+  .menu-btn::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--ink);
+    scale: 1 0;
+    transform-origin: bottom;
+    transition: scale 420ms var(--ease-roll);
+  }
+  .menu-btn[aria-expanded="true"] { color: var(--paper); border-color: var(--ink) }
+  .menu-btn[aria-expanded="true"]::before { scale: 1 }
+
+  /* Two bars. Opening, they meet in the middle and only then cross; closing, they uncross
+     and only then part — each move waits for the one before it. On hover they slide a
+     little past each other. The hover is on `left`, apart from the transforms, so it is
+     never held up by the delays the open and close sequences need. */
+  .burger { position: relative; display: block; width: 18px; height: 12px }
+  .burger span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.6px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: rotate 260ms var(--ease-roll), translate 260ms var(--ease-roll) 200ms,
+                left 320ms var(--ease-roll);
+  }
+  .burger span:first-child { top: 0 }
+  .burger span:last-child { bottom: 0 }
+  @media (hover: hover) {
+    .menu-btn:hover { color: var(--paper); border-color: var(--ink) }
+    .menu-btn:hover::before { scale: 1 }
+    .menu-btn:hover .burger span:first-child { left: 3px }
+    .menu-btn:hover .burger span:last-child { left: -3px }
+  }
+  .menu-btn[aria-expanded="true"] .burger span {
+    transition: translate 260ms var(--ease-roll), rotate 300ms var(--ease-roll) 200ms,
+                left 320ms var(--ease-roll);
+  }
+  .menu-btn[aria-expanded="true"] .burger span:first-child { left: 0; translate: 0 5.2px; rotate: 45deg }
+  .menu-btn[aria-expanded="true"] .burger span:last-child { left: 0; translate: 0 -5.2px; rotate: -45deg }
+
+  /* On a wide page at the top the links are on show, so there is no menu button. */
+  @media (min-width: 1024px) {
+    .nav:not(.is-float) .menu-btn { width: 0; border-width: 0; opacity: 0; visibility: hidden }
+    .nav.is-live .menu-btn {
+      transition: color 300ms var(--ease-roll), border-color 300ms var(--ease-roll),
+                  opacity 120ms ease, visibility 0s linear 120ms, width 0s linear 120ms,
+                  border-width 0s linear 120ms;
+    }
+    .nav.is-live.is-float .menu-btn {
+      transition: color 300ms var(--ease-roll), border-color 300ms var(--ease-roll),
+                  opacity 280ms ease 170ms, visibility 0s linear 150ms, width 0s linear 150ms,
+                  border-width 0s linear 150ms;
+    }
+  }
+
+  /* ---------- the menu ----------
+     It hangs from the bar's surface, as wide as it and lined up under the mark, and is
+     uncovered downward in step with the surface growing to hold it. The links rise into
+     place one after another, each out of its own mask, and leave by fading so they are gone
+     before the surface has started back up past them. */
+  .panel {
+    position: absolute;
+    top: calc(var(--nav-h) - var(--sy));
+    left: var(--sx);
+    right: var(--sx);
+    padding: 2px var(--bar-pad) 18px;
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 560ms var(--ease-roll), visibility 0s linear 560ms;
+  }
+  .nav.is-open .panel { visibility: visible; clip-path: inset(0); transition: clip-path 560ms var(--ease-roll) }
+  .panel-links { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line) }
+  .panel-links li { overflow: hidden; border-bottom: 1px solid var(--line) }
+  .panel-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0 12px;
+    color: var(--ink);
+    text-decoration: none;
+    font: 600 28px/1 var(--display);
+    letter-spacing: -0.015em;
+    opacity: 0;
+    translate: 0 105%;
+    transition: opacity 150ms ease, translate 0s linear 150ms;
+  }
+  .nav.is-open .panel-link {
+    opacity: 1;
+    translate: none;
+    transition: translate 640ms var(--ease-roll) calc(140ms + var(--i) * 60ms),
+                opacity 0s linear calc(140ms + var(--i) * 60ms);
+  }
+  /* The list items clip, so the ring goes inside the link rather than being cut off. */
+  .panel-link:focus-visible { outline-offset: -2px }
+  .panel-no { padding-top: 4px; font: 500 11px/1 var(--mark); letter-spacing: 0.08em; color: var(--ink-3); transition: color 200ms ease }
+  .panel-link:hover .panel-no, .panel-link:focus-visible .panel-no { color: var(--ink) }
+  .panel-link:hover .roll em, .panel-link:focus-visible .roll em { translate: 0 -100% }
+  .panel-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-top: 16px;
+    font: 500 14px/20px var(--body);
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .nav.is-open .panel-foot { opacity: 1; transition: opacity 400ms ease 440ms }
+  .panel-foot a { color: var(--ink-2); text-decoration: none; transition: color 160ms ease }
+  .panel-foot a:hover { color: var(--ink) }
+  @media (prefers-reduced-motion: reduce) {
+    .panel, .nav.is-open .panel, .panel-link, .nav.is-open .panel-link,
+    .panel-foot, .nav.is-open .panel-foot,
+    .burger span, .menu-btn[aria-expanded="true"] .burger span { transition: none }
+  }
+  html:not(.js) .panel { display: none }
+
+  /* ---------- the offer ----------
+     The client runs ads, and the offer meets the visitor twice: a strip at the very top of
+     the page that runs right to left — the same direction as the shoots and the sets — and a
+     popup, once a visit, a few seconds after the page arrives. The strip is one button that
+     opens it. In flow above the bar, so it scrolls away and the bar sticks to the top in its
+     place; the hero reaches up behind the bar only. */
+  .offer {
+    position: relative;
+    z-index: 15;
+    display: block;
+    width: 100%;
+    height: var(--offer-h);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: var(--indigo);
+    color: var(--paper);
+    font: 500 14px/1 var(--body);
+    cursor: pointer;
+  }
+  .offer:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px }
+  .offer-track { display: flex; width: max-content; height: 100%; align-items: center }
+  .offer-run { display: flex; align-items: center; gap: 12px; padding-right: 28px; white-space: nowrap }
+  .offer-pct {
+    padding: 4px 7px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--indigo);
+    font: 700 13px/1 var(--head);
+    letter-spacing: 0.02em;
+  }
+  .offer-run s { opacity: 0.7; text-decoration-thickness: 1.5px }
+  .offer-run strong { font-weight: 700 }
+  .offer-arrow { opacity: 0.8 }
+  .offer-dot { padding-left: 16px; font-size: 11px; opacity: 0.6 }
+  @keyframes offer-run { to { translate: -50% 0 } }
+  @media (prefers-reduced-motion: no-preference) {
+    .offer-track { animation: offer-run 38s linear infinite }
+    .offer:hover .offer-track, .offer:focus-visible .offer-track { animation-play-state: paused }
+  }
+
+  /* The popup: the card rises out of a mask as the room dims behind it, and its words follow
+     one after another. Esc, the close button, "Maybe later" or a press on the dark space
+     closes it. */
+  .offer-pop {
+    width: min(760px, calc(100% - 32px));
+    max-width: none;
+    max-height: calc(100dvh - 32px);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    overflow: visible;
+    background: transparent;
+  }
+  .offer-pop::backdrop { background: rgba(20, 20, 19, 0.62); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px) }
+  .offer-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--paper);
+    box-shadow: 0 40px 80px -40px rgba(20, 20, 19, 0.6);
+  }
+  .offer-art { position: relative; min-height: 100%; background: var(--lilac) }
+  .offer-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20% }
+  .offer-stamp {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--indigo);
+    color: var(--paper);
+    font: 700 30px/1 var(--head);
+    letter-spacing: -0.03em;
+    text-align: center;
+    rotate: -10deg;
+  }
+  .offer-stamp small { display: block; margin-top: -10px; font: 600 13px/1 var(--body); letter-spacing: 0.08em; text-transform: uppercase }
+  .offer-copy { display: flex; flex-direction: column; align-items: flex-start; padding: 48px 40px 36px }
+  .offer-kicker { font: 500 12px/16px var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--indigo) }
+  .offer-title { margin: 12px 0 0; font: 600 34px/1.1 var(--head); letter-spacing: -0.02em; color: var(--ink) }
+  .offer-title span { display: block; font-size: 64px; font-weight: 700; letter-spacing: -0.04em; color: var(--indigo) }
+  .offer-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 10px; margin-top: 20px; font: 500 18px/1 var(--body); color: var(--ink-2) }
+  .offer-price s { color: var(--ink-3); text-decoration-thickness: 1.5px }
+  .offer-price strong { font: 700 32px/1 var(--head); letter-spacing: -0.03em; color: var(--ink) }
+  .offer-note { margin-top: 14px; font: 400 14px/21px var(--body); color: #55534D; text-wrap: pretty }
+  .btn-offer { align-self: stretch; height: 52px; margin-top: 28px; padding: 0 24px; font-size: 16px }
+  .offer-later {
+    align-self: center;
+    margin-top: 12px;
+    padding: 8px;
+    border: 0;
+    background: none;
+    font: 500 14px/1 var(--body);
+    color: var(--ink-3);
+    cursor: pointer;
+  }
+  .offer-later:hover { color: var(--ink) }
+  .offer-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .offer-close svg { width: 16px; height: 16px }
+  .offer-close:hover { border-color: var(--ink) }
+  html:has(.offer-pop[open]) { overflow: hidden }
+  @keyframes offer-dim { from { opacity: 0 } }
+  @keyframes offer-in { from { translate: 0 48px; clip-path: inset(100% 0 0 0 round 16px) } to { clip-path: inset(0 0 0 0 round 16px) } }
+  @keyframes offer-word { from { opacity: 0; translate: 0 18px } }
+  @keyframes offer-stamp { from { scale: 0.4; rotate: -40deg; opacity: 0 } }
+  @media (prefers-reduced-motion: no-preference) {
+    .offer-pop[open]::backdrop { animation: offer-dim 360ms ease }
+    .offer-pop[open] .offer-card { animation: offer-in 760ms var(--ease-arrive) }
+    .offer-pop[open] .offer-copy > * { animation: offer-word 700ms var(--ease-arrive) backwards }
+    .offer-pop[open] .offer-copy > :nth-child(1) { animation-delay: 240ms }
+    .offer-pop[open] .offer-copy > :nth-child(2) { animation-delay: 300ms }
+    .offer-pop[open] .offer-copy > :nth-child(3) { animation-delay: 360ms }
+    .offer-pop[open] .offer-copy > :nth-child(4) { animation-delay: 420ms }
+    .offer-pop[open] .offer-copy > :nth-child(n + 5) { animation-delay: 480ms }
+    .offer-pop[open] .offer-stamp { animation: offer-stamp 700ms var(--ease-arrive) 420ms backwards }
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    /* The shoots and the clouds are drawn on a 1440-wide grid and scaled to the screen, so
+       each keeps its place at any width. */
+    --stage-w: max(820px, 100cqw);
+    --u: calc(var(--stage-w) / 1440);
+    position: relative;
+    container-type: inline-size;
+    /* The box reaches up behind the bar and the padding puts the content back down where
+       it was, so the hero's own bottom edge, and everything under it, does not move. This
+       is what lets the top clouds be seen behind the links rather than cut off at the bar.
+       The clip stays on both axes: the shoots stand on the hero's bottom edge and are cut
+       by it, and they rise up out of it when the loader lifts. */
+    margin-top: calc(-1 * var(--nav-h));
+    padding-top: var(--nav-h);
+    overflow: hidden;
+    overflow: clip;
+    background: var(--paper);
+  }
+
+  /* Placed to the pixel on the client's 1440 page: the eyebrow's cap line at 209, the
+     headline's baselines at 313 and 391, the lede's at 446 and 471, the buttons 502 to 558,
+     the middle shoot's top at 616. */
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 132px var(--gutter) 0;
+    text-align: center;
+  }
+  .eyebrow {
+    font: 500 14px/20px var(--body);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  h1 {
+    margin-top: 24px;
+    font-family: var(--head);
+    /* 72px, the client's size, until the first line, "Book your next shoot", would no
+       longer fit on one line; then as large as it can be and still fit. That line is 10.5em
+       wide at this tracking, and the second line is shorter with any of the five words. */
+    font-size: max(24px, min(72px, (100cqw - 2 * var(--gutter)) / 10.6));
+    font-weight: 700;
+    line-height: 1.0833;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+  /* ---------- the marked word in the headline ----------
+     "brand" stays still and gets a lavender stroke across its lower half, the way a marker
+     is run under a word. The stroke is drawn in left to right as the headline arrives —
+     after the curtain when the loader showed, a beat after load when it did not — and is
+     simply there with reduced motion. It sits behind the ink, so the letters stay black. */
+  .hl {
+    background: linear-gradient(var(--lavender), var(--lavender)) 0 86% / 100% 0.3em no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  @keyframes hl-draw { from { background-size: 0% 0.3em } }
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .hl { background-size: 0% 0.3em }
+    html.js.no-loader .hl, html.js.is-revealed .hl { background-size: 100% 0.3em; animation: hl-draw 900ms var(--ease-arrive) 1500ms backwards }
+    html.js.no-loader .hl { animation-delay: 500ms }
+  }
+
+  /* ---------- roll-over links ----------
+     Two stacked copies; the pair slides by exactly one line. */
+  /* 1.4em, not 1em. At 1em the mask is exactly the line box, so the font's own ascenders
+     and descenders spill past it and the copy waiting underneath shows as a sliver along
+     the bottom edge — plainest on "How booking works", whose g hangs furthest. The pair
+     still travels exactly one copy, because a copy is still exactly the mask's height. */
+  .roll { display: block; overflow: hidden; height: 1.4em }
+  .roll em {
+    display: block;
+    height: 1.4em;
+    line-height: 1.4;
+    font-style: inherit;
+    transition: translate 420ms var(--ease-roll);
+  }
+
+  .lede { margin-top: 24px; font: 400 16px/25px var(--body); color: var(--ink-2); text-wrap: pretty }
+  .hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px }
+  .btn-hero { height: 56px; padding: 0 32px; font-size: 17px }
+  /* The client's second button, outlined in indigo. On hover the indigo rises up it from the
+     bottom edge, the way the menu button fills with ink. */
+  .btn-line {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    height: 56px;
+    padding: 0 32px;
+    border: 2px solid var(--indigo);
+    background: var(--paper);
+    color: var(--indigo);
+    font-size: 17px;
+    transition: color 300ms var(--ease-roll), transform 160ms ease;
+  }
+  .btn-line::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--indigo);
+    scale: 1 0;
+    transform-origin: bottom;
+    transition: scale 420ms var(--ease-roll);
+  }
+  .btn-line:hover { background: var(--paper) }
+  @media (hover: hover) {
+    .btn-line:hover { color: var(--paper) }
+    .btn-line:hover::before { scale: 1 }
+  }
+  .btn-line:focus-visible { outline-color: var(--indigo) }
+
+  /* ---------- sky and stage ---------- */
+  /* The sky holds the clouds around the headline, measured from the top of the hero's
+     content; the stage holds the shoots, measured from its own top edge. Both use design
+     pixels. */
+  .sky, .stage {
+    width: var(--stage-w);
+    margin-left: calc(50% - var(--stage-w) / 2);
+  }
+  /* Measured from where the hero's content starts, not from its box: the box reaches up
+     behind the bar, and the clouds are placed against the design's own origin. */
+  .sky { position: absolute; top: var(--nav-h); left: 0; z-index: 1; height: 0 }
+  /* As tall as the middle shoot, which stands on the hero's bottom edge like the rest. */
+  .stage {
+    position: relative;
+    z-index: 1;
+    height: calc(499 * var(--u));
+    margin-top: 58px;
+  }
+  .sky > *, .stage > * { position: absolute }
+  .layer { will-change: transform }
+
+  .prop {
+    left: calc(var(--x) * var(--u));
+    top: calc(var(--y) * var(--u));
+    width: calc(var(--w) * var(--u));
+  }
+  .prop img { width: 100%; height: auto; pointer-events: none; user-select: none }
+
+  /* Where the client's page has them. The top two run off the top of the window there, so
+     they show their lower halves behind the links. */
+  .cloud-1 { --x: -67;   --y: 113;  --w: 170; --t: 17s }
+  .cloud-3 { --x: 334;   --y: -171; --w: 230; --t: 19s }
+  .cloud-4 { --x: 1298;  --y: -109; --w: 242; --t: 23s }
+  .cloud-2 { --x: 1031;  --y: 376;  --w: 276; --t: 21s }
+  /* Off the middle shoot's top right corner, the arrow turned to point back at it. The
+     client's sat 20px further right, with the shoots 20px off centre; here the shoots are
+     centred under the headline and these move with them. */
+  .note    { --x: 916;   --y: 12;   --w: 166; z-index: 2; margin: 0 }
+  .arrow   { --x: 920;   --y: 51;   --w: 76; --turn: 181deg; z-index: 2 }
+  .arrow img { transform: rotate(var(--turn)) }
+
+  /* ---------- the shoots carousel ----------
+     Right to left, the middle shoot large and the others stepping down from it, each photo in
+     a lilac frame as the client drew it. Every card stands on the hero's bottom edge and is cut
+     by it, so each shows the top of its shoot — more of it the nearer it is to the middle.
+     The frame, its corners and the photo's corners all ease between sizes with the card. */
+  .shoots { z-index: 1; inset: 0; margin: 0; padding: 0; list-style: none }
+  .shoot {
+    --x: 0; --w: 222; --h: 100; --pad: 4; --r: 8; --ir: 5;
+    position: absolute;
+    left: calc((720 + var(--x)) * var(--u));
+    bottom: 0;
+    width: calc(var(--w) * var(--u));
+    height: calc(var(--h) * var(--u));
+    translate: -50% 0;
+    padding: calc(var(--pad) * var(--u)) calc(var(--pad) * var(--u)) 0;
+    overflow: hidden;
+    border-radius: calc(var(--r) * var(--u));
+    background: var(--lilac);
+    cursor: pointer;
+    transition:
+      left 900ms var(--ease),
+      width 900ms var(--ease),
+      height 900ms var(--ease),
+      padding 900ms var(--ease),
+      border-radius 900ms var(--ease);
+  }
+  .shoot[data-pos="0"]  { --x: 0;     --w: 350; --h: 499; --pad: 12; --r: 16; --ir: 8; cursor: default }
+  .shoot[data-pos="1"]  { --x: 346;   --w: 262; --h: 259 }
+  .shoot[data-pos="-1"] { --x: -346;  --w: 262; --h: 259 }
+  .shoot[data-pos="2"]  { --x: 628 }
+  .shoot[data-pos="-2"] { --x: -628 }
+  /* Off stage: where each card leaves to, waits, and comes back from. */
+  .shoot[data-pos="3"]  { --x: 890 }
+  .shoot[data-pos="-3"] { --x: -890 }
+  .shoot[data-pos="4"]  { --x: 1152 }
+  .shoot[data-pos="-4"] { --x: -1152 }
+  .shoot[data-pos="5"]  { --x: 1414 }
+  .shoot[data-pos="-5"] { --x: -1414 }
+  .shoot[data-pos="-6"] { --x: -1676 }
+  /* A wrapping card jumps from one end to the other; it must never be seen crossing. */
+  .shoot.is-snapping { transition: none !important }
+  .shoot img {
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--ir) * var(--u));
+    pointer-events: none;
+    transition: border-radius 900ms var(--ease);
+  }
+
+  .shoots-toggle {
+    z-index: 3;
+    /* Pinned to the screen's edge, not the stage's: on a phone the stage runs past both sides. */
+    right: calc(max(0px, (var(--stage-w) - 100cqw) / 2) + 20px);
+    bottom: calc(100 * var(--u) + 16px);
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--ink);
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .shoots-toggle svg { width: 12px; height: 12px }
+  .shoots-toggle .i-play { display: none }
+  .hero.is-still .shoots-toggle .i-play { display: block }
+  .hero.is-still .shoots-toggle .i-pause { display: none }
+  html:not(.js) .shoots-toggle { display: none }
+
+  /* Idle drift, on the image inside each parallax layer so the two never fight. */
+  @keyframes drift { from { translate: calc(-6 * var(--u)) 0 } to { translate: calc(8 * var(--u)) 0 } }
+  .js .cloud img { animation: drift var(--t, 16s) ease-in-out infinite alternate }
+  .hero.is-still .cloud img { animation-play-state: paused }
+
+  /* ---------- how booking works ----------
+     Four cards read left to right, each numbered on its photo, so the order is never in doubt
+     without a line drawn between them: the layout from before the client's round, on their
+     lavender. Paper cards, 16px corners, the picture set in at 8px, and the chip is the
+     menu's numbering. No button: step one says which button to tap. */
+  .band-steps { margin-top: 10px; padding: 96px var(--gutter); background: var(--lavender) }
+  .steps-title, .space-title, .price-title, .faq-title {
+    margin: 0;
+    font: 600 48px/1.1 var(--head);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin: 48px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 10px;
+    background: var(--paper);
+    border-radius: 16px;
+  }
+  .step-art { position: relative; overflow: hidden; border-radius: 8px; background: #E2DFD9 }
+  .step-shot { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover }
+  .step-no {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 7px 9px 6px;
+    border-radius: 4px;
+    background: var(--paper);
+    font: 500 11px/1 var(--mark);
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+  .step-body { padding: 18px 12px 12px }
+  .step h3 { margin: 0; font: 600 24px/1.2 var(--head); letter-spacing: -0.01em; color: var(--ink); text-wrap: balance }
+  .step p { max-width: 32ch; margin-top: 8px; font: 400 16px/25px var(--body); color: #55534D; text-wrap: pretty }
+
+  /* ---------- one space ----------
+     The sets in a window the strip runs past, beside the client's line about them: the
+     heading level with the window's top and the sentence with its foot, as they drew it. */
+  .space {
+    --col-gap: 32px;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    padding: 96px var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+  .space .strip { grid-row: 1; grid-column: 1 / span 8 }
+  .space-copy {
+    grid-row: 1;
+    grid-column: 9 / span 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .space-title { font-size: 36px; line-height: 1.17; letter-spacing: -0.01em }
+  .space-text { max-width: 26em; font: 400 16px/26px var(--body); color: #55534D; text-wrap: pretty }
+
+  /* The window: the client's 1px rule and 8px corners, with the chip grey showing in the gaps.
+     The strip inside runs right to left on its own and can be grabbed and dragged (Sets.tsx).
+     A finger's vertical swipe still scrolls the page; a sideways one drags the strip. */
+  .strip {
+    container-type: inline-size;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--chip);
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .strip.is-dragging { cursor: grabbing }
+  .strip.is-dragging .set { pointer-events: none }
+  /* Every set is followed by its gap, the last one too, so one set of five plus its gaps is
+     exactly the distance from a set to its copy: the loop closes without a seam. */
+  .sets { display: flex; width: max-content; margin: 0; padding: 0; list-style: none; will-change: transform }
+  .sets li { flex: none; padding-right: 16px }
+  /* 250 x 400 in the client's 864-wide window, and the same share of any other. */
+  .set {
+    position: relative;
+    display: block;
+    height: 46.3cqw;
+    aspect-ratio: 5 / 8;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #E2DFD9;
+    cursor: inherit;
+  }
+  .set img { width: 100%; height: 100%; object-fit: cover; transition: scale 700ms var(--ease) }
+  /* Inside the edge: the window clips anything drawn outside a set. */
+  .set:focus-visible { outline: 3px solid var(--indigo); outline-offset: -3px }
+  .set-zoom {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 4px 14px rgba(20, 20, 19, 0.18);
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .set-zoom svg { width: 14px; height: 14px }
+  .set:focus-visible .set-zoom { opacity: 1 }
+  @media (hover: hover) {
+    .set:hover .set-zoom { opacity: 1 }
+  }
+  @media (hover: none) {
+    .set-zoom { opacity: 1 }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .set:hover img { scale: 1.04 }
+  }
+
+  /* ---------- set viewer ---------- */
+  /* Any set opens full size on a dark ground: the arrows, a swipe or the arrow keys move
+     between them, and Esc, the close button or a tap on the dark space closes it. */
+  .viewer {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 64px 104px 80px;
+    border: 0;
+    background: transparent;
+    color: var(--paper);
+    overflow: hidden;
+    touch-action: pan-y pinch-zoom;
+  }
+  .viewer[open] { display: grid; place-items: center }
+  .viewer::backdrop { background: rgba(14, 14, 13, 0.96) }
+  .viewer-img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100vh - 144px);
+    max-height: calc(100dvh - 144px);
+    border-radius: 8px;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .viewer-btn {
+    position: fixed;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--paper);
+    cursor: pointer;
+    transition: background-color 160ms ease;
+  }
+  .viewer-btn:hover { background: rgba(255, 255, 255, 0.24) }
+  .viewer-btn:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px }
+  .viewer-btn svg { width: 18px; height: 18px }
+  .viewer-close { top: 16px; right: 16px }
+  .viewer-prev, .viewer-next { top: 50%; translate: 0 -50% }
+  .viewer-prev { left: 24px }
+  .viewer-next { right: 24px }
+  .viewer-count {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 28px;
+    text-align: center;
+    font: 500 14px/20px var(--body);
+    color: rgba(255, 255, 255, 0.72);
+    font-variant-numeric: tabular-nums;
+  }
+  html:has(.viewer[open]) { overflow: hidden }
+  @keyframes fade { from { opacity: 0 } }
+  @keyframes pop { from { opacity: 0; scale: 0.97 } }
+  @media (prefers-reduced-motion: no-preference) {
+    .viewer[open]::backdrop { animation: fade 240ms ease }
+    .viewer[open] .viewer-img { animation: pop 360ms var(--ease) }
+  }
+
+  /* ---------- pricing ----------
+     Two rates and the bill on the client's lilac, and nothing in between. Each rate card
+     says when on its first row and what it costs at its foot, the saving on one row above the
+     price in both, so ₹1,000 and ₹700 line up; night is the client's indigo. Under them, the
+     one list of what comes with both, then one line of fine print. */
+  .band-price { margin-top: 10px; padding: 96px var(--gutter); background: var(--lilac) }
+  .price-lede { max-width: 34em; margin-top: 16px; font: 400 17px/28px var(--body); color: #55534D; text-wrap: pretty }
+  .price-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 64px;
+    align-items: start;
+    margin-top: 48px;
+  }
+  .rates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rate {
+    --soft: #55534D;
+    padding: 28px 32px 32px;
+    border-radius: 16px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .rate-night { --soft: rgba(255, 255, 255, 0.78); background: var(--indigo); color: var(--paper) }
+  .rate-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font: 600 16px/24px var(--body) }
+  .rate-name svg { width: 20px; height: 20px }
+  .rate-time { margin-left: auto; font: 400 15px/24px var(--body); color: var(--soft) }
+  .rate-deal { display: flex; align-items: center; gap: 10px; min-height: 24px; margin-top: 56px }
+  .rate-was { font: 500 16px/1 var(--body); color: var(--soft); text-decoration-thickness: 1.5px }
+  .rate-tag {
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: var(--indigo);
+    color: var(--paper);
+    font: 600 12px/14px var(--body);
+    letter-spacing: 0.01em;
+  }
+  .rate-night .rate-tag { background: var(--paper); color: var(--indigo) }
+  .rate-price { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; margin-top: 12px }
+  .rate-figure { font: 700 60px/1 var(--head); letter-spacing: -0.03em }
+  .rate-per { font: 500 16px/1 var(--body); color: var(--soft) }
+
+  /* A tick list rather than chips, which read as filters. */
+  .price-incl { margin-top: 48px }
+  .price-label { margin: 0; font: 600 16px/24px var(--body); color: var(--ink) }
+  .included {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 24px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .included li { display: flex; gap: 10px; font: 400 16px/24px var(--body); color: var(--ink-2) }
+  .included li::before {
+    content: '';
+    flex: none;
+    width: 16px;
+    height: 24px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='%234E4EFF' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat;
+  }
+  .price-fine {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(20, 20, 19, 0.12);
+    font: 400 15px/24px var(--body);
+    color: #55534D;
+    text-wrap: pretty;
+  }
+  .price-fine a { color: var(--ink); text-underline-offset: 3px }
+
+  /* ---------- the bill ---------- */
+  .bill { padding: 28px; border-radius: 16px; background: var(--paper) }
+  .bill-title { margin: 0; font: 600 24px/1.2 var(--head); letter-spacing: -0.01em; color: var(--ink) }
+  .bill-slot {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin: 20px 0 0;
+    padding: 4px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--lilac);
+  }
+  .bill-slot label { position: relative; cursor: pointer }
+  .bill-slot input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0 }
+  .bill-slot span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    border-radius: 999px;
+    font: 600 14px/1 var(--body);
+    color: var(--ink-3);
+    transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  }
+  .bill-slot svg { width: 16px; height: 16px }
+  .bill-slot input:checked + span { background: var(--paper); color: var(--indigo); box-shadow: 0 1px 3px rgba(20, 20, 19, 0.18) }
+  .bill-slot input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px }
+  .bill-hours { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px }
+  .bill-hours-label { font: 500 15px/22px var(--body); color: var(--ink-2) }
+  .stepper { display: flex; align-items: center; gap: 4px }
+  .stepper button {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 160ms ease, opacity 160ms ease;
+  }
+  .stepper button:hover { border-color: var(--ink) }
+  .stepper button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px }
+  .stepper button[aria-disabled="true"] { border-color: var(--line); opacity: 0.35; cursor: not-allowed }
+  .stepper svg { width: 14px; height: 14px }
+  .stepper output { min-width: 3ch; font: 600 18px/1 var(--body); font-variant-numeric: tabular-nums; text-align: center; color: var(--ink) }
+  .bill-total {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font: 600 56px/1 var(--head);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .bill-sum { margin-top: 8px; font: 400 14px/20px var(--body); color: #55534D }
+  /* A plain row, not a second box inside the card. */
+  .bill-advance {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+    font: 500 15px/22px var(--body);
+    color: var(--ink-2);
+  }
+  .bill-advance strong { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--indigo) }
+  .btn-bill { width: 100%; height: 52px; margin-top: 20px; font-size: 16px }
+  .bill-note { margin-top: 12px; font: 400 13px/19px var(--body); color: #55534D; text-align: center; text-wrap: balance }
+  html:not(.js) .bill-slot, html:not(.js) .bill-hours { display: none }
+
+  /* ---------- questions ---------- */
+  /* Every answer is a line or two, so they all stay open: hiding one line behind a click costs
+     more than it saves, and the page can still be searched. The money questions come first,
+     because the bill is the first worry and the pricing terms send people here for overtime and
+     cancellation. Each answer's first word, or the fact that settles it, is set in ink so the
+     list can be read down the left edge. The heading and the way to ask stay in view beside it. */
+  .faq {
+    --col-gap: 32px;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    align-items: start;
+    padding: 96px var(--gutter) 104px;
+    border-bottom: 1px solid var(--line);
+    background: var(--wash);
+  }
+  .faq-head { grid-column: 1 / span 5; position: sticky; top: calc(var(--nav-h) + 40px) }
+  .faq-ask {
+    position: relative;
+    display: block;
+    max-width: 400px;
+    margin-top: 40px;
+    padding: 24px 76px 26px 28px;
+    border-radius: 8px;
+    background: var(--lilac);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color 200ms ease;
+  }
+  .faq-ask-title { display: block; font: 600 22px/1.25 var(--head); letter-spacing: -0.01em }
+  .faq-ask-line { display: block; margin-top: 8px; font: 400 16px/24px var(--body); color: var(--ink-2) }
+  .faq-ask-number { font-weight: 600; color: var(--ink); white-space: nowrap }
+  .faq-ask-go {
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--indigo);
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .faq-ask-go svg { width: 14px; height: 14px }
+  .faq-ask:hover { background: #DCDCF8 }
+  .faq-ask:hover .faq-ask-go { background: var(--indigo); color: var(--paper) }
+  .faq-list { grid-column: 7 / span 6; margin: 0; padding: 0; list-style: none }
+  .qa { padding: 26px 0 28px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--nav-h) + 24px) }
+  .qa:last-child { border-bottom: 1px solid var(--line) }
+  .qa h3 { margin: 0; font: 600 20px/1.35 var(--head); letter-spacing: -0.01em; color: var(--ink); text-wrap: balance }
+  .qa p { margin-top: 8px; font: 400 17px/28px var(--body); color: #55534D; text-wrap: pretty }
+  .qa strong { font-weight: 600; color: var(--ink) }
+
+  /* ---------- footer ---------- */
+  /* The practical end of the page: where, when, and how to reach the studio. Every line that
+     does something is a link with its icon. The labels stand as tall as the logo, so the
+     three columns start their lines together. */
+  .foot {
+    container-type: inline-size; /* so the wordmark below can size itself to this box */
+    overflow: hidden;            /* nothing in here may ever widen the page */
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 32px;
+    padding: 64px var(--gutter) 72px;
+    font: 400 15px/24px var(--body);
+    color: var(--ink-2);
+  }
+  .foot .brand { width: max-content }
+  /* Decorative: the footer already links the wordmark above, so this is not announced twice. */
+  .foot-mark {
+    grid-column: 1 / -1;
+    margin: 64px 0 -0.14em;
+    font-family: var(--mark);
+    font-style: italic;
+    font-weight: 800;
+    /* Saira italic 800 sets "G3 STUDIO" at 5.18x its own font size, so dividing the footer's
+       content box by a hair more than that spans it exactly at every width. cqw rather than
+       vw, because vw counts the scrollbar and would overflow by its width. */
+    font-size: min(100cqw / 5.21, 340px);
+    line-height: 0.78;
+    letter-spacing: 0.005em;
+    color: var(--ink);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .foot address { margin-top: 20px; font-style: normal }
+  .foot-label {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    margin: 0;
+    font: 500 12px/16px var(--body);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #55534D;
+  }
+  .foot-hours, .foot-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none }
+  .foot-hours div { display: flex; gap: 10px }
+  .foot-hours dt { display: flex; align-items: center; gap: 10px; min-width: 80px; font-weight: 500; color: var(--ink) }
+  .foot-hours dd { margin: 0 }
+  .foot svg { flex: none; width: 18px; height: 18px; color: var(--ink-3) }
+  .foot-link { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none }
+  .foot-link:hover { text-decoration: underline; text-underline-offset: 4px }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---------- arrival ---------- */
+  /* Marked items rise in turn, once, the first time their section comes into view. */
+  @keyframes rise { from { opacity: 0; translate: 0 28px } }
+  /* The hero, when the loader showed: the headline block waits a little low under the curtain
+     and rises into place as it lifts, and the shoots come up out of the hero's bottom edge
+     after it, the middle one first and the rest outward from it, so the page arrives rather
+     than being uncovered. Transform only, and the middle shoot is never pushed out of sight:
+     it is painted under the curtain from the start, so the first paint and the largest one
+     stay where they would have been without a loader. A visit that skips the loader gets
+     none of this. */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js:not(.no-loader) .hero-copy > * { translate: 0 56px }
+    html.js:not(.no-loader).is-revealed .hero-copy > * {
+      translate: none;
+      transition: translate 1150ms var(--ease-arrive) calc(420ms + var(--n, 0) * 70ms);
+    }
+    .hero-copy > :nth-child(2) { --n: 1 }
+    .hero-copy > :nth-child(3) { --n: 2 }
+    .hero-copy > :nth-child(4) { --n: 3 }
+    /* A transform of their own, apart from the `translate` that centres each card. */
+    html.js:not(.no-loader) .shoot { transform: translateY(calc(150 * var(--u))) }
+    html.js:not(.no-loader).is-revealed .shoot {
+      transform: none;
+      transition:
+        transform 1200ms var(--ease-arrive) calc(600ms + var(--d, 0) * 110ms),
+        left 900ms var(--ease),
+        width 900ms var(--ease),
+        height 900ms var(--ease),
+        padding 900ms var(--ease),
+        border-radius 900ms var(--ease);
+    }
+    .shoot:is([data-pos="1"], [data-pos="-1"]) { --d: 1 }
+    .shoot:is([data-pos="2"], [data-pos="-2"]) { --d: 2 }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-rise]:not(.is-in) { opacity: 0 }
+    .js [data-rise].is-in { animation: rise 820ms var(--ease-arrive) var(--delay, 0ms) backwards }
+  }
+
+  /* ---------- breakpoints ---------- */
+  @media (max-width: 1279px) {
+    .phone { display: none }
+    .space { --col-gap: 24px }
+    .space-title { font-size: 32px }
+    .price-layout { grid-template-columns: minmax(0, 1fr) 340px; gap: 40px }
+    .rate { padding: 24px 24px 26px }
+    .rate-figure { font-size: 50px }
+    .included li { font-size: 15px }
+    .bill { padding: 24px }
+    .bill-total { font-size: 48px }
+    .faq { --col-gap: 24px }
+    .qa h3 { font-size: 19px }
+  }
+  @media (max-width: 1023px) {
+    :root { --gutter: 40px }
+    /* Narrower than this the links only ever live in the menu. */
+    .nav-links { display: none }
+
+    .hero-copy { padding-top: 96px }
+    .stage { margin-top: 48px }
+
+    /* Two by two; the pictures go landscape so a row of cards is not a wall of portraits. */
+    .band-steps { padding-block: 64px }
+    .steps-title, .price-title, .faq-title { font-size: 40px }
+    .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 36px }
+    .step-shot { aspect-ratio: 4 / 3 }
+    .step h3 { font-size: 22px }
+    .step p { font-size: 15px; line-height: 23px }
+
+    /* The words over the strip, which takes the full width. */
+    .space { display: block; padding-block: 72px }
+    .space-copy { gap: 16px; margin-bottom: 32px }
+    .space-title { font-size: 36px }
+
+    /* One column: the rates, then the bill on its side (choices left, total right), then what
+       comes with both, then the fine print. */
+    .band-price { padding-block: 64px }
+    .price-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 36px }
+    .price-main { display: contents }
+    .rates { order: 1 }
+    .bill { order: 2; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; align-items: start; padding: 28px }
+    .bill-total { margin-top: 0; padding-top: 0; border-top: 0 }
+    .price-incl { order: 3; margin-top: 32px }
+    .price-fine { order: 4; margin-top: 16px }
+    .rate-figure { font-size: 46px }
+
+    /* One column: the heading, every question, then the way to ask once you have read them. */
+    .faq { display: flex; flex-direction: column; align-items: stretch; padding-block: 72px 80px }
+    .faq-head { display: contents }
+    .faq-title { order: 1 }
+    .faq-list { order: 2; margin-top: 32px }
+    .faq-ask { order: 3; max-width: none; margin-top: 40px }
+
+    /* The address takes the first row; hours and contact share the second. */
+    .foot { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-block: 56px 72px }
+    .foot-col:first-child { grid-column: 1 / -1 }
+    .foot-label { min-height: 0 }
+    .foot-hours, .foot-list { margin-top: 14px }
+    /* Thumb-sized rows for the links. */
+    .foot-list { gap: 0 }
+    .foot-link { min-height: 44px }
+  }
+  @media (max-width: 640px) {
+    :root { --gutter: 20px; --nav-h: 64px; --offer-h: 36px }
+    .nav { --float-gap: 6px }
+    .mark { height: 36px; padding-inline: 8px; font-size: 16px }
+    .menu-btn { width: 40px; height: 40px }
+    .btn-nav { height: 40px; padding: 0 14px; font-size: 13px }
+    .panel-link { font-size: 26px }
+
+    .hero-copy { padding-top: 72px }
+    .eyebrow { font-size: 12px; line-height: 16px }
+    h1 { margin-top: 16px }
+    .lede { margin-top: 16px; line-height: 24px }
+    /* One above the other at the same width, so neither button is cut or squeezed. */
+    .hero-acts { flex-direction: column; align-self: stretch; margin-top: 22px }
+    .btn-hero, .btn-line { height: 52px; font-size: 16px }
+    .stage { margin-top: 40px }
+
+    /* A phone sees the middle of the stage, so the clouds step in to stay on it. The shoots
+       step left of centre to leave the note room on their right — the client's own page has
+       them off centre the same way. */
+    .hero { --stage-w: clamp(800px, 230cqw, 1100px) }
+    .shoots { translate: calc(-100 * var(--u)) 0 }
+    .note    { --x: 816 }
+    .arrow   { --x: 820 }
+    .cloud-1 { --x: 300;  --y: 40 }
+    .cloud-3 { --x: 470;  --y: -150 }
+    .cloud-4 { --x: 930;  --y: -90 }
+    .cloud-2 { --x: 1010; --y: 330; --w: 230 }
+
+    .band-steps { padding-block: 48px }
+    .steps-title, .price-title, .faq-title { font-size: 32px }
+    /* One column of short cards, the photo beside the words rather than above them. */
+    .steps { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 28px }
+    .step { display: grid; grid-template-columns: 104px minmax(0, 1fr); column-gap: 14px; align-items: start; padding: 8px }
+    .step-shot { aspect-ratio: 4 / 5 }
+    .step-no { top: 6px; left: 6px; padding: 5px 6px 4px; font-size: 10px }
+    .step-body { padding: 8px 6px 6px 0 }
+    .step h3 { font-size: 21px }
+    .step p { margin-top: 6px }
+
+    .space { padding-block: 56px }
+    .space-title { font-size: 28px }
+    .set { height: min(300px, 86cqw) }
+
+    /* The two rates stay side by side down to 360, so they still read as a pair; then the bill,
+       then the list in two columns. */
+    .band-price { padding-block: 48px }
+    .price-lede { font-size: 16px; line-height: 26px }
+    .price-layout { grid-template-columns: minmax(0, 1fr); margin-top: 28px }
+    .rates { gap: 10px }
+    .rate { padding: 18px 16px 20px; border-radius: 12px }
+    .rate-name { font-size: 15px }
+    .rate-name svg { width: 18px; height: 18px }
+    .rate-time { flex-basis: 100%; margin-left: 0; font-size: 13px; line-height: 18px }
+    .rate-deal { gap: 8px; margin-top: 28px }
+    .rate-was { font-size: 14px }
+    .rate-figure { font-size: 36px }
+    .rate-per { flex-basis: 100%; margin-top: 6px; font-size: 14px }
+    .included { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px }
+    .included li { gap: 8px; font-size: 14px; line-height: 20px }
+    .included li::before { width: 14px; height: 20px; background-size: 14px }
+    .price-incl { margin-top: 28px }
+    .price-fine { font-size: 14px; line-height: 22px }
+    .bill { display: block; padding: 20px }
+    .bill-total { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 44px }
+
+    .faq { padding-block: 56px 64px }
+    .faq-list { margin-top: 24px }
+    .qa { padding: 20px 0 22px }
+    .qa h3 { font-size: 18px }
+    .qa p { margin-top: 6px; font-size: 16px; line-height: 26px }
+    .faq-ask { margin-top: 32px; padding: 20px 68px 22px 20px }
+    .faq-ask-title { font-size: 20px }
+    .faq-ask-go { right: 20px }
+
+    .offer { font-size: 13px }
+    .offer-card { grid-template-columns: minmax(0, 1fr) }
+    .offer-art { min-height: 150px }
+    .offer-stamp { left: auto; right: 16px; bottom: -28px; width: 80px; height: 80px; font-size: 25px }
+    .offer-copy { padding: 28px 22px 20px }
+    .offer-title { font-size: 26px }
+    .offer-title span { font-size: 48px }
+    .offer-price strong { font-size: 28px }
+    .btn-offer { margin-top: 22px }
+
+    .viewer { padding: 56px 12px 88px }
+    .viewer-img { max-height: calc(100vh - 160px); max-height: calc(100dvh - 160px) }
+    .viewer-prev, .viewer-next { top: auto; bottom: 16px; translate: none }
+    .viewer-prev { left: 16px }
+    .viewer-next { right: 16px }
+    .viewer-count { bottom: 30px }
+
+    .foot { grid-template-columns: minmax(0, 1fr); row-gap: 32px; padding-block: 48px 64px }
+    .foot address { margin-top: 16px }
+  }
+  @media (max-width: 359px) {
+    .rates { grid-template-columns: minmax(0, 1fr) }
+    .rate-time { flex-basis: auto; margin-left: auto }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .cloud img { animation: none }
+    .shoot, .shoot img { transition: none }
+  }
