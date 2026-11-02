@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 /**
  * Each group's marked items rise in turn, once, the first time the group comes into view.
@@ -10,6 +11,8 @@ import { useEffect } from 'react';
  * property. The animation itself sits behind a reduced-motion query in the stylesheet.
  */
 export function Reveals() {
+  // Again on every page change: coming back from the gallery mounts the sections afresh.
+  const pathname = usePathname();
   useEffect(() => {
     const arrival = new IntersectionObserver(
       (entries) => {
@@ -28,7 +31,7 @@ export function Reveals() {
 
     document.querySelectorAll('[data-rise-group]').forEach((group) => arrival.observe(group));
     return () => arrival.disconnect();
-  }, []);
+  }, [pathname]);
 
   return null;
 }

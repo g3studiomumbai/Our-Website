@@ -1,6 +1,10 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { Loader } from '@/components/Loader';
+import { Footer } from '@/components/Footer';
 import { Hero } from '@/components/client/Hero';
+import { Offer } from '@/components/client/Offer';
+import { SiteHeader } from '@/components/client/SiteHeader';
 import { Steps } from '@/components/Steps';
 import { Space } from '@/components/Space';
 import { Pricing } from '@/components/Pricing';
@@ -21,13 +25,21 @@ export default function Page() {
     ? { href: BROCHURE_PDF, file: true }
     : { href: BROCHURE_ASK_HREF, file: false };
 
+  // The loader first in the body, so its dismissal script runs as early as it can.
   return (
     <>
-      <Hero brochure={brochure} />
-      <Steps />
-      <Space />
-      <Pricing />
-      <Faq />
+      <Loader />
+      {/* The client's offer, above the bar: a strip, and the popup it opens. */}
+      <Offer />
+      <SiteHeader />
+      <main id="top">
+        <Hero brochure={brochure} />
+        <Steps />
+        <Space />
+        <Pricing />
+        <Faq />
+      </main>
+      <Footer />
     </>
   );
 }

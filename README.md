@@ -22,7 +22,32 @@ npm run figma         # out/ -> figma/index.html, one self-contained file
 
 ## What the client changed
 
-Four rounds so far. The latest is first.
+Five rounds so far. The latest is first.
+
+**5. A gallery** (2026-11-02):
+
+- **"See more"** sits beside the hero's pause button, drawn like it: a pill that
+  fills with indigo on hover. It is a real link to `/gallery/`.
+- **The loading screen.** Pressing it brings the loader's dark room up over the
+  page behind a curved edge; "GALLERY" fills and a big count runs to 100 as the
+  gallery's fourteen photographs actually load — the count is the real share
+  loaded, eased, and capped at six seconds. Then the page changes underneath and
+  the curtain lifts off it the way the first-visit loader lifts. "Back to the
+  studio" goes the same way. `components/client/Curtain.tsx`.
+- **The gallery** is a page of its own (`app/gallery/page.tsx`), so it can be
+  shared and comes up in the sitemap. "Shot at / G3 Studio." set big, rising out
+  of masks; then every photograph the client has given us — the five shoots, the
+  five sets, the four from How booking works, nothing else — in three columns
+  (two on a tablet or phone) that slide past each other as the page scrolls. Each
+  picture unmasks upward as it comes into view and settles from a zoom; a mouse
+  gets an indigo "View" disc in place of the pointer. A press opens a dark viewer
+  with the count, the caption, arrows, arrow keys, swipe, and a rail of every
+  picture. It ends on "Your shoot, next." and the booking button.
+  `components/client/Gallery.tsx`, the list in `lib/gallery.ts`.
+- The home page's loader, offer, bar and footer moved from `app/layout.tsx` into
+  `app/page.tsx`, so the gallery has its own bar. The captions in the gallery
+  are said from the pictures ("Pink arches", "Gold among roses"); the client may
+  want their own.
 
 **4. The offer on top, a fuller bar, a quieter price** (2026-11-02):
 
@@ -183,14 +208,16 @@ draws for a path it will not fetch. It roughly triples the file.
 
 ```
 app/
-  layout.tsx        metadata, JSON-LD, fonts, the before-paint loader script
-  page.tsx          the sections, in order
+  layout.tsx        metadata, JSON-LD, fonts, the before-paint loader script, the curtain
+  page.tsx          the home page: loader, offer, bar, the sections in order, footer
+  gallery/page.tsx  the gallery
   globals.css       the original stylesheet, verbatim
   sitemap.ts  robots.ts
 components/         Steps, Space, Pricing, Faq, Footer, Loader, Mark, icons
-components/client/  Hero, Sets, Bill, Offer, SiteHeader, Reveals, BookingProvider
+components/client/  Hero, Sets, Bill, Offer, SiteHeader, Reveals, BookingProvider,
+                    Curtain, Gallery
                     use-parallax, use-carousel, motion
-lib/                booking (the messages), site (the facts), faq, sets, schema
+lib/                booking (the messages), site (the facts), faq, sets, gallery, schema
 scripts/            figma-html.mjs, serve-static.mjs
 ```
 
@@ -198,6 +225,18 @@ Everything is a Server Component except the hero and the interactive islands.
 The page is `output: 'export'` — no server, no client-side fetching.
 
 ## Things that look like noise and are not
+
+- **Going to another page sets `html.no-loader`.** The first-visit loader is
+  lifted by an inline script that only runs when the HTML is parsed. A home page
+  rendered on the client — coming back from the gallery — has no such script, and
+  its loader would cover the page for good. The curtain sets the class before it
+  moves, and the gallery sets it on arrival, which covers the browser's back
+  button too.
+- **`Reveals` runs again on every page change**, for the same reason: the
+  sections coming back from the gallery are new elements nobody is watching.
+- **The gallery's masonry is CSS columns**, so it is laid out with no script.
+  The script reads which column each picture landed in and moves it with
+  `translate`, which does not change the `offsetLeft` it reads.
 
 - **`lib/booking.ts` composes every WhatsApp message.** The three "Check
   available slots" buttons — the bar's, the hero's and the bill's — read theirs

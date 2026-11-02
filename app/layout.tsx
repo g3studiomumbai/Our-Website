@@ -7,12 +7,9 @@ import {
   TITLE,
 } from '@/lib/site';
 import { faqSchema, jsonLd, localBusinessSchema } from '@/lib/schema';
-import { Loader } from '@/components/Loader';
-import { Footer } from '@/components/Footer';
-import { SiteHeader } from '@/components/client/SiteHeader';
 import { Reveals } from '@/components/client/Reveals';
 import { BookingProvider } from '@/components/client/BookingProvider';
-import { Offer } from '@/components/client/Offer';
+import { Curtain } from '@/components/client/Curtain';
 import './globals.css';
 
 /**
@@ -112,14 +109,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
 
-        <Loader />
-
+        {/* Each page brings its own bar, main and footer; the curtain goes between them. */}
         <BookingProvider>
-          {/* The client's offer, above the bar: a strip, and the popup it opens. */}
-          <Offer />
-          <SiteHeader />
-          <main id="top">{children}</main>
-          <Footer />
+          <Curtain>{children}</Curtain>
         </BookingProvider>
 
         <Reveals />

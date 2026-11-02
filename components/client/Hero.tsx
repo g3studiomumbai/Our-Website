@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
+import { GALLERY_PRELOAD } from '@/lib/gallery';
 import { BookingLink } from './BookingProvider';
+import { CurtainLink } from './Curtain';
 import { createMotionStore } from './motion';
 import { useParallax } from './use-parallax';
 import { useCarousel } from './use-carousel';
@@ -209,6 +211,14 @@ export function Hero({ brochure }: { brochure: Brochure }) {
           <img src="/assets/arrow.webp" alt="" width={262} height={313} />
         </div>
 
+        {/* To the gallery, by way of the curtain. A link of its own, so the hero itself
+            still never re-renders. */}
+        <CurtainLink className="shoots-more" href="/gallery/" label="Gallery" preload={GALLERY_PRELOAD}>
+          See more
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M3 9l6-6M4 3h5v5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </CurtainLink>
         <button className="shoots-toggle" type="button" aria-label="Pause the animation" ref={toggleRef}>
           <svg className="i-pause" viewBox="0 0 12 12" aria-hidden="true">
             <rect x="2" y="1" width="3" height="10" rx="1" fill="currentColor" />
