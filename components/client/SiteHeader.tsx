@@ -135,7 +135,7 @@ export function SiteHeader() {
       </nav>
       <div className="nav-act">
         <a className="phone" href={'tel:' + PHONE_E164}>
-          {PHONE_HUMAN}
+          <span className="blink">{PHONE_HUMAN}</span>
         </a>
         <button
           className="menu-btn"
@@ -174,7 +174,9 @@ export function SiteHeader() {
             ))}
           </ol>
           <p className="panel-foot">
-            <a href={'tel:' + PHONE_E164}>{`Call ${PHONE_HUMAN}`}</a>
+            <a className="panel-call" href={'tel:' + PHONE_E164}>
+              <span className="blink">{`Call ${PHONE_HUMAN}`}</span>
+            </a>
             <a href={'https://wa.me/' + WHATSAPP_NUMBER}>WhatsApp</a>
           </p>
         </nav>

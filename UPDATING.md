@@ -39,9 +39,9 @@ Most of the look is the three **brand** colours:
 
 | Name | Default | Where it shows |
 |---|---|---|
-| `--accent` | `#4E4EFF` indigo | Offer strip, night-rate card, "70% OFF", ticks, prices, Get Brochure, links |
-| `--accent-soft` | `#E7E7FA` pale lilac | Pricing section, photo frames, bill switch, "Still have a question?" card |
-| `--accent-mid` | `#C4C4FB` lavender | "How booking works" background |
+| `--accent` | `#111111` black | Offer strip, night-rate card, "70% OFF", ticks, prices, Get Brochure, links |
+| `--accent-soft` | `#F2F2F2` palest grey | Pricing section, photo frames, bill switch, "Still have a question?" card |
+| `--accent-mid` | `#E4E4E4` light grey | "How booking works" background |
 
 Below them are the text greys (`--ink` is also the black buttons and the dark loading
 screen) and the page colours.
@@ -49,7 +49,7 @@ screen) and the page colours.
 To change the theme:
 
 1. Open `content/theme.css` and replace the hex values (`#RRGGBB`). The file ends
-   with five ready-made sets — Forest, Terracotta, Ocean, Plum, Charcoal — to copy in.
+   with ready-made sets to copy in — Indigo (the site's first colours), Forest, Terracotta, Ocean, Plum, Charcoal.
 2. Run `npm run dev` and look at http://localhost:3000 — the page updates as you save.
 3. Push.
 

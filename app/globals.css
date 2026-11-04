@@ -344,7 +344,7 @@
   }
   .nav-links a {
     padding: 8px 0;
-    font: 500 14px/1 var(--head);
+    font: 700 14px/1 var(--head);
     color: var(--ink-2);
     text-decoration: none;
     white-space: nowrap;
@@ -365,11 +365,20 @@
     margin-right: 11px;
     overflow: hidden;
     white-space: nowrap;
-    font: 500 14px/1 var(--head);
-    color: var(--ink-2);
+    font: 600 14px/1 var(--head);
+    color: var(--ink);
     text-decoration: none;
   }
-  .phone:hover { color: var(--ink) }
+  .phone:hover { text-decoration: underline; text-underline-offset: 4px }
+
+  /* ---------- the number, highlighted ----------
+     The studio's number blinks — in the bar, the menu and the footer — so the eye finds it.
+     Only its brightness changes, never its place, so it runs for everyone, including those
+     who asked for less motion. */
+  .blink { animation: blink 1.2s ease-in-out infinite }
+  @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: 0.2 } }
+  .panel-foot .panel-call, .foot-call { color: var(--ink); font-weight: 600 }
+
   .btn-nav { height: 44px; margin-left: 8px; padding: 0 20px; font-size: 14px; white-space: nowrap }
 
   .nav.is-live :is(.nav-links, .phone) {

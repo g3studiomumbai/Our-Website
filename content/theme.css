@@ -13,26 +13,26 @@
      The accent is the one strong colour: the offer strip at the top, the night-rate card,
      "70% OFF", the ticks, the active choice in the bill, prices and links. White text sits
      on it, so keep it dark enough to read white on (anything as deep as the default is). */
-  --accent: #4E4EFF;
+  --accent: #111111;
   /* A very pale tint of the accent: the pricing section, the frames round the photos,
      the bill's Day/Night switch and the "Still have a question?" card. */
-  --accent-soft: #E7E7FA;
+  --accent-soft: #F2F2F2;
   /* A stronger tint: the background of "How booking works". */
-  --accent-mid: #C4C4FB;
+  --accent-mid: #E4E4E4;
 
   /* ---- Text --------------------------------------------------------------------------
      --ink is the darkest colour: headings, the black buttons, the logo, and the dark
      loading screen and photo viewer. The others step down from it. */
-  --ink: #141413;
-  --ink-2: #44423D;   /* links in the bar, list items */
-  --copy: #55534D;    /* paragraphs and small print */
-  --ink-3: #6E6C66;   /* the quietest text: labels, numbers */
+  --ink: #141414;
+  --ink-2: #3F3F3F;   /* links in the bar, list items */
+  --copy: #555555;    /* paragraphs and small print */
+  --ink-3: #6E6E6E;   /* the quietest text: labels, numbers */
 
   /* ---- Surfaces ------------------------------------------------------------------- */
   --paper: #FFFFFF;   /* the page, the cards, text on dark or accent backgrounds */
-  --wash: #FCFCFB;    /* the questions section, a shade off the page */
-  --chip: #F2F1EF;    /* small grey chips and tags */
-  --line: #DEDCD7;    /* hairlines, borders, and the grey behind a photo while it loads */
+  --wash: #FAFAFA;    /* the questions section, a shade off the page */
+  --chip: #EFEFEF;    /* small grey chips and tags */
+  --line: #DCDCDC;    /* hairlines, borders, and the grey behind a photo while it loads */
 
   /* ---- Mixed from the above (no need to touch) --------------------------------------- */
   --ink-hover: color-mix(in srgb, var(--ink) 92%, var(--paper));
@@ -44,6 +44,10 @@
 
 /*
  * READY-MADE THEMES — to try one, copy its lines over the matching ones above.
+ *
+ * Indigo (the original):  --accent: #4E4EFF;  --accent-soft: #E7E7FA;  --accent-mid: #C4C4FB;
+ *   and for its warm greys: --ink: #141413; --ink-2: #44423D; --copy: #55534D; --ink-3: #6E6C66;
+ *   --wash: #FCFCFB; --chip: #F2F1EF; --line: #DEDCD7;
  *
  * Forest:      --accent: #1F6F4A;  --accent-soft: #E3F1E9;  --accent-mid: #BFE0CD;
  * Terracotta:  --accent: #B5482A;  --accent-soft: #F8E8E1;  --accent-mid: #EFC6B6;

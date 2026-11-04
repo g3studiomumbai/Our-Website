@@ -65,7 +65,7 @@ export function Footer() {
             </a>
           </li>
           <li>
-            <a className="foot-link" href={'tel:' + PHONE_E164}>
+            <a className="foot-link foot-call" href={'tel:' + PHONE_E164}>
               <svg viewBox="0 0 20 20" aria-hidden="true">
                 <path
                   d="M5.6 2.8h2.2l1.2 3.6-1.7 1.2a10 10 0 0 0 5.1 5.1l1.2-1.7 3.6 1.2v2.2a1.8 1.8 0 0 1-1.9 1.8A14.4 14.4 0 0 1 3.8 4.7a1.8 1.8 0 0 1 1.8-1.9z"
@@ -75,7 +75,7 @@ export function Footer() {
                   strokeLinejoin="round"
                 />
               </svg>
-              {`Call ${PHONE_HUMAN}`}
+              <span className="blink">{`Call ${PHONE_HUMAN}`}</span>
             </a>
           </li>
           <li>
