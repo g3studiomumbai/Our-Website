@@ -59,6 +59,10 @@ Six rounds so far. The latest is first.
   the photo, which repeated the heading, are gone.
 - **The bar and its menu are set in Montserrat**, like every heading. Fraunces is
   gone (one 66 KB font fewer on every visit).
+- **The colours live in one file, `content/theme.css`**: ten named values, with the
+  brand colours renamed by role (`--accent`, `--accent-soft`, `--accent-mid`, were
+  indigo, lilac, lavender), the hard-coded greys and shadows mixed from them, and the
+  tick drawn as a mask in the accent. Five ready-made themes are listed at its foot.
 - **Directions** open the studio's Google Business listing, whose pin also gives the
   structured data its `geo`.
 

@@ -1,0 +1,53 @@
+/*
+ * THE SITE'S COLOURS — change the theme here, and only here.
+ *
+ * Every colour on the site comes from these few values. Hover shades, shadows, the dark
+ * loading screen, the photo viewer and the frosted bars are all mixed from them, so they
+ * follow along on their own. Edit a value, save, and the whole site changes.
+ *
+ * Use hex colours (#RRGGBB). A colour picker that gives hex works: Google "color picker",
+ * or coolors.co. See UPDATING.md → "Changing the colours".
+ */
+:root {
+  /* ---- Brand ---------------------------------------------------------------------
+     The accent is the one strong colour: the offer strip at the top, the night-rate card,
+     "70% OFF", the ticks, the active choice in the bill, prices and links. White text sits
+     on it, so keep it dark enough to read white on (anything as deep as the default is). */
+  --accent: #4E4EFF;
+  /* A very pale tint of the accent: the pricing section, the frames round the photos,
+     the bill's Day/Night switch and the "Still have a question?" card. */
+  --accent-soft: #E7E7FA;
+  /* A stronger tint: the background of "How booking works". */
+  --accent-mid: #C4C4FB;
+
+  /* ---- Text --------------------------------------------------------------------------
+     --ink is the darkest colour: headings, the black buttons, the logo, and the dark
+     loading screen and photo viewer. The others step down from it. */
+  --ink: #141413;
+  --ink-2: #44423D;   /* links in the bar, list items */
+  --copy: #55534D;    /* paragraphs and small print */
+  --ink-3: #6E6C66;   /* the quietest text: labels, numbers */
+
+  /* ---- Surfaces ------------------------------------------------------------------- */
+  --paper: #FFFFFF;   /* the page, the cards, text on dark or accent backgrounds */
+  --wash: #FCFCFB;    /* the questions section, a shade off the page */
+  --chip: #F2F1EF;    /* small grey chips and tags */
+  --line: #DEDCD7;    /* hairlines, borders, and the grey behind a photo while it loads */
+
+  /* ---- Mixed from the above (no need to touch) --------------------------------------- */
+  --ink-hover: color-mix(in srgb, var(--ink) 92%, var(--paper));
+  --accent-soft-hover: color-mix(in srgb, var(--accent-soft) 93%, var(--accent));
+  --dark-raised: color-mix(in srgb, var(--ink) 92%, var(--paper));
+  --dark-muted: color-mix(in srgb, var(--ink) 50%, var(--paper));
+  --glass: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+/*
+ * READY-MADE THEMES — to try one, copy its lines over the matching ones above.
+ *
+ * Forest:      --accent: #1F6F4A;  --accent-soft: #E3F1E9;  --accent-mid: #BFE0CD;
+ * Terracotta:  --accent: #B5482A;  --accent-soft: #F8E8E1;  --accent-mid: #EFC6B6;
+ * Ocean:       --accent: #0E5E8C;  --accent-soft: #E1EEF6;  --accent-mid: #B8D6EA;
+ * Plum:        --accent: #6B2F7A;  --accent-soft: #F1E6F4;  --accent-mid: #DCC2E3;
+ * Charcoal:    --accent: #2E2E2E;  --accent-soft: #EFEFEC;  --accent-mid: #D9D8D3;
+ */

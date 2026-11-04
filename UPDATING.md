@@ -27,6 +27,39 @@ about a minute. To look first, run `npm run dev` and open http://localhost:3000.
 | Questions (FAQ) | `content/faq.ts` (also feeds Google's FAQ data) |
 | Share picture (WhatsApp/Facebook preview) | replace `public/images/share.jpg`, 1200 × 630 |
 | Brochure | save the PDF as `public/g3-studio-brochure.pdf` |
+| Colours / theme | `content/theme.css` (see below) |
+
+## Changing the colours
+
+Every colour on the site is in **`content/theme.css`** — about ten values with plain
+names. Hover shades, shadows, the dark loading screen, the photo viewer and the frosted
+bars are mixed from them, so they follow on their own.
+
+Most of the look is the three **brand** colours:
+
+| Name | Default | Where it shows |
+|---|---|---|
+| `--accent` | `#4E4EFF` indigo | Offer strip, night-rate card, "70% OFF", ticks, prices, Get Brochure, links |
+| `--accent-soft` | `#E7E7FA` pale lilac | Pricing section, photo frames, bill switch, "Still have a question?" card |
+| `--accent-mid` | `#C4C4FB` lavender | "How booking works" background |
+
+Below them are the text greys (`--ink` is also the black buttons and the dark loading
+screen) and the page colours.
+
+To change the theme:
+
+1. Open `content/theme.css` and replace the hex values (`#RRGGBB`). The file ends
+   with five ready-made sets — Forest, Terracotta, Ocean, Plum, Charcoal — to copy in.
+2. Run `npm run dev` and look at http://localhost:3000 — the page updates as you save.
+3. Push.
+
+Two rules keep it readable: `--accent` carries white text, so keep it as dark as the
+default or darker; `--accent-soft` sits behind dark text, so keep it very pale. A good
+pair is one colour at full strength for `--accent`, and the same colour mixed about 90%
+with white for `--accent-soft` (75% for `--accent-mid`).
+
+The photos, clouds and the hand-written "our studio shoots" are pictures, so they keep
+their own colours.
 
 ## Adding or swapping a photo
 

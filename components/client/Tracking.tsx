@@ -135,7 +135,9 @@ export function Tracking() {
           seen.unobserve(el);
         }
       },
-      { threshold: 0.3 },
+      // Not a share of the element: the gallery grid is many screens tall and would never
+      // be 30% in view. Seen means it has come a third of the way up the screen.
+      { threshold: 0, rootMargin: '0px 0px -33% 0px' },
     );
     document.querySelectorAll('[data-track-view]').forEach((el) => seen.observe(el));
     return () => seen.disconnect();

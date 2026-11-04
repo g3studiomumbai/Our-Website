@@ -12,6 +12,8 @@ import { Reveals } from '@/components/client/Reveals';
 import { BookingProvider } from '@/components/client/BookingProvider';
 import { Curtain } from '@/components/client/Curtain';
 import { Tracking } from '@/components/client/Tracking';
+// The colours first: every rule in globals.css reads them. See content/theme.css.
+import '@/content/theme.css';
 import './globals.css';
 
 /**

@@ -26,7 +26,11 @@ export function Reveals() {
           arrival.unobserve(entry.target);
         }
       },
-      { threshold: 0.2 },
+      // A share of the group (threshold 0.2) can never be reached by a group more than five
+      // screens tall — the questions on a short or zoomed window — which left it blank for
+      // good. Instead: any part of it inside the screen, less the bottom eighth, so the rise
+      // is still seen but no height is too tall.
+      { threshold: 0, rootMargin: '0px 0px -12% 0px' },
     );
 
     document.querySelectorAll('[data-rise-group]').forEach((group) => arrival.observe(group));

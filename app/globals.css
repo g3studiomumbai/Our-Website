@@ -19,20 +19,8 @@
   @font-face { font-family: 'Inter Arial'; font-weight: 600 900; src: local('Arial Bold'), local('Arial-BoldMT'); size-adjust: 100.79%; ascent-override: 96.24%; descent-override: 23.81%; line-gap-override: 0% }
   @font-face { font-family: 'Inter Roboto'; font-weight: 100 900; src: local('Roboto'), local('Roboto-Regular'); size-adjust: 107.54%; ascent-override: 90.20%; descent-override: 22.32%; line-gap-override: 0% }
 
+  /* Every colour is in content/theme.css, so a new theme is an edit there, not here. */
   :root {
-    --ink: #141413;
-    --ink-2: #44423D;
-    --ink-3: #6E6C66;
-    --paper: #FFFFFF;
-    --chip: #F2F1EF;
-    --line: #DEDCD7;
-    /* The client's colours: lilac under every photo frame and the included list, lavender
-       for How booking works, and one indigo for whatever is on offer or can be pressed. */
-    --lilac: #E7E7FA;
-    --lavender: #C4C4FB;
-    --indigo: #4E4EFF;
-    --wash: #FCFCFB;
-
     --head: 'Montserrat', 'Montserrat Arial', Arial, sans-serif;
     --body: 'Inter', 'Inter Arial', 'Inter Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --mark: 'Saira', 'Arial Narrow', sans-serif;
@@ -81,7 +69,7 @@
     white-space: nowrap;
     transition: background-color 160ms ease, transform 160ms ease;
   }
-  .btn:hover { background: #2B2A27 }
+  .btn:hover { background: var(--ink-hover) }
   .btn:active { transform: translateY(1px) }
   a:focus-visible, button:focus-visible {
     outline: 2px solid var(--ink);
@@ -141,10 +129,10 @@
     overflow: hidden;
     padding: 11px 16px 9px;
     border-radius: 999px;
-    background: #26251F;
+    background: var(--dark-raised);
     font: italic 800 13px/1 var(--mark);
     letter-spacing: 0.06em;
-    color: #8C8A83;
+    color: var(--dark-muted);
     transition: translate 520ms var(--ease-roll) calc(var(--out, 0) * 60ms);
   }
   .loader-chip:nth-child(2) { --out: 1 }
@@ -217,7 +205,7 @@
     font: italic 800 13px/1 var(--mark);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #8C8A83;
+    color: var(--dark-muted);
   }
   .curtain-count {
     position: absolute;
@@ -288,10 +276,10 @@
     background: transparent;
   }
   .nav.is-float::before {
-    background: rgba(255, 255, 255, 0.82);
+    background: var(--glass);
     -webkit-backdrop-filter: blur(16px) saturate(1.6);
     backdrop-filter: blur(16px) saturate(1.6);
-    box-shadow: 0 0 0 1px rgba(20, 20, 19, 0.07), 0 14px 30px -16px rgba(20, 20, 19, 0.34);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent), 0 14px 30px -16px color-mix(in srgb, var(--ink) 34%, transparent);
   }
   /* Open, the surface reaches down past the bar by the menu's height (measured in
      SiteHeader) and turns solid. Even at 97% the headline behind showed through the list as
@@ -299,7 +287,7 @@
   .nav.is-open::before {
     bottom: calc(var(--sy) - var(--panel-h, 0px));
     background: var(--paper);
-    box-shadow: 0 0 0 1px rgba(20, 20, 19, 0.07), 0 28px 56px -28px rgba(20, 20, 19, 0.45);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent), 0 28px 56px -28px color-mix(in srgb, var(--ink) 45%, transparent);
   }
 
   /* Only once the bar is live, so a reload partway down the page arrives already floating
@@ -551,7 +539,7 @@
     padding: 0;
     overflow: hidden;
     border: 0;
-    background: var(--indigo);
+    background: var(--accent);
     color: var(--paper);
     font: 500 14px/1 var(--body);
     cursor: pointer;
@@ -563,7 +551,7 @@
     padding: 4px 7px;
     border-radius: 4px;
     background: var(--paper);
-    color: var(--indigo);
+    color: var(--accent);
     font: 700 13px/1 var(--head);
     letter-spacing: 0.02em;
   }
@@ -590,7 +578,7 @@
     overflow: visible;
     background: transparent;
   }
-  .offer-pop::backdrop { background: rgba(20, 20, 19, 0.62); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px) }
+  .offer-pop::backdrop { background: color-mix(in srgb, var(--ink) 62%, transparent); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px) }
   .offer-card {
     position: relative;
     display: grid;
@@ -598,17 +586,17 @@
     overflow: hidden;
     border-radius: 16px;
     background: var(--paper);
-    box-shadow: 0 40px 80px -40px rgba(20, 20, 19, 0.6);
+    box-shadow: 0 40px 80px -40px color-mix(in srgb, var(--ink) 60%, transparent);
   }
-  .offer-art { position: relative; min-height: 100%; background: var(--lilac) }
+  .offer-art { position: relative; min-height: 100%; background: var(--accent-soft) }
   .offer-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20% }
   .offer-copy { display: flex; flex-direction: column; align-items: flex-start; padding: 48px 40px 36px }
   .offer-title { margin: 0; font: 600 34px/1.1 var(--head); letter-spacing: -0.02em; color: var(--ink) }
-  .offer-title span { display: block; font-size: 64px; font-weight: 700; letter-spacing: -0.04em; color: var(--indigo) }
+  .offer-title span { display: block; font-size: 64px; font-weight: 700; letter-spacing: -0.04em; color: var(--accent) }
   .offer-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 10px; margin-top: 20px; font: 500 18px/1 var(--body); color: var(--ink-2) }
   .offer-price s { color: var(--ink-3); text-decoration-thickness: 1.5px }
   .offer-price strong { font: 700 32px/1 var(--head); letter-spacing: -0.03em; color: var(--ink) }
-  .offer-note { margin-top: 14px; font: 400 14px/21px var(--body); color: #55534D; text-wrap: pretty }
+  .offer-note { margin-top: 14px; font: 400 14px/21px var(--body); color: var(--copy); text-wrap: pretty }
   .btn-offer { align-self: stretch; height: 52px; margin-top: 28px; padding: 0 24px; font-size: 16px }
   .offer-later {
     align-self: center;
@@ -709,7 +697,7 @@
      after the curtain when the loader showed, a beat after load when it did not — and is
      simply there with reduced motion. It sits behind the ink, so the letters stay black. */
   .hl {
-    background: linear-gradient(var(--lavender), var(--lavender)) 0 86% / 100% 0.3em no-repeat;
+    background: linear-gradient(var(--accent-mid), var(--accent-mid)) 0 86% / 100% 0.3em no-repeat;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }
@@ -746,9 +734,9 @@
     overflow: hidden;
     height: 56px;
     padding: 0 32px;
-    border: 2px solid var(--indigo);
+    border: 2px solid var(--accent);
     background: var(--paper);
-    color: var(--indigo);
+    color: var(--accent);
     font-size: 17px;
     transition: color 300ms var(--ease-roll), transform 160ms ease;
   }
@@ -757,7 +745,7 @@
     position: absolute;
     z-index: -1;
     inset: 0;
-    background: var(--indigo);
+    background: var(--accent);
     scale: 1 0;
     transform-origin: bottom;
     transition: scale 420ms var(--ease-roll);
@@ -767,7 +755,7 @@
     .btn-line:hover { color: var(--paper) }
     .btn-line:hover::before { scale: 1 }
   }
-  .btn-line:focus-visible { outline-color: var(--indigo) }
+  .btn-line:focus-visible { outline-color: var(--accent) }
 
   /* ---------- sky and stage ---------- */
   /* The sky holds the clouds around the headline, measured from the top of the hero's
@@ -836,7 +824,7 @@
     padding: calc(var(--pad) * var(--u)) calc(var(--pad) * var(--u)) 0;
     overflow: hidden;
     border-radius: calc(var(--r) * var(--u));
-    background: var(--lilac);
+    background: var(--accent-soft);
     cursor: pointer;
     transition:
       left 900ms var(--ease),
@@ -880,7 +868,7 @@
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.82);
+    background: var(--glass);
     color: var(--ink);
     cursor: pointer;
     -webkit-backdrop-filter: blur(6px);
@@ -906,8 +894,8 @@
     overflow: hidden;
     isolation: isolate;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.82);
-    box-shadow: inset 0 0 0 1px rgba(20, 20, 19, 0.12);
+    background: var(--glass);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent);
     color: var(--ink);
     font: 600 13px/1 var(--body);
     text-decoration: none;
@@ -921,7 +909,7 @@
     position: absolute;
     z-index: -1;
     inset: 0;
-    background: var(--indigo);
+    background: var(--accent);
     scale: 1 0;
     transform-origin: bottom;
     transition: scale 420ms var(--ease-roll);
@@ -932,7 +920,7 @@
     .shoots-more:hover::before { scale: 1 }
     .shoots-more:hover svg { rotate: 45deg }
   }
-  .shoots-more:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px }
+  .shoots-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
   /* Without scripting there is no pause button, so it takes the pause button's place. */
   html:not(.js) .shoots-more { right: calc(max(0px, (var(--stage-w) - 100cqw) / 2) + 20px) }
 
@@ -946,7 +934,7 @@
      without a line drawn between them: the layout from before the client's round, on their
      lavender. Paper cards, 16px corners, the picture set in at 8px, and the chip is the
      menu's numbering. No button: step one says which button to tap. */
-  .band-steps { padding: 96px var(--gutter); background: var(--lavender) }
+  .band-steps { padding: 96px var(--gutter); background: var(--accent-mid) }
   .steps-title, .space-title, .price-title, .faq-title {
     margin: 0;
     font: 600 48px/1.1 var(--head);
@@ -970,7 +958,7 @@
     background: var(--paper);
     border-radius: 16px;
   }
-  .step-art { position: relative; overflow: hidden; border-radius: 8px; background: #E2DFD9 }
+  .step-art { position: relative; overflow: hidden; border-radius: 8px; background: var(--line) }
   .step-shot { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover }
   .step-no {
     position: absolute;
@@ -985,7 +973,7 @@
   }
   .step-body { padding: 18px 12px 12px }
   .step h3 { margin: 0; font: 600 24px/1.2 var(--head); letter-spacing: -0.01em; color: var(--ink); text-wrap: balance }
-  .step p { max-width: 32ch; margin-top: 8px; font: 400 16px/25px var(--body); color: #55534D; text-wrap: pretty }
+  .step p { max-width: 32ch; margin-top: 8px; font: 400 16px/25px var(--body); color: var(--copy); text-wrap: pretty }
 
   /* ---------- one space ----------
      The sets in a window the strip runs past, beside the client's line about them: the
@@ -1007,7 +995,7 @@
     gap: 32px;
   }
   .space-title { font-size: 36px; line-height: 1.17; letter-spacing: -0.01em }
-  .space-text { max-width: 26em; font: 400 16px/26px var(--body); color: #55534D; text-wrap: pretty }
+  .space-text { max-width: 26em; font: 400 16px/26px var(--body); color: var(--copy); text-wrap: pretty }
 
   /* The window: the client's 1px rule and 8px corners, with the chip grey showing in the gaps.
      The strip inside runs right to left on its own and can be grabbed and dragged (Sets.tsx).
@@ -1039,12 +1027,12 @@
     border: 0;
     border-radius: 4px;
     overflow: hidden;
-    background: #E2DFD9;
+    background: var(--line);
     cursor: inherit;
   }
   .set img { width: 100%; height: 100%; object-fit: cover; transition: scale 700ms var(--ease) }
   /* Inside the edge: the window clips anything drawn outside a set. */
-  .set:focus-visible { outline: 3px solid var(--indigo); outline-offset: -3px }
+  .set:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px }
   .set-zoom {
     position: absolute;
     top: 12px;
@@ -1056,7 +1044,7 @@
     border-radius: 4px;
     background: var(--paper);
     color: var(--ink);
-    box-shadow: 0 4px 14px rgba(20, 20, 19, 0.18);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--ink) 18%, transparent);
     opacity: 0;
     transition: opacity 200ms ease;
   }
@@ -1089,7 +1077,7 @@
     touch-action: pan-y pinch-zoom;
   }
   .viewer[open] { display: grid; place-items: center }
-  .viewer::backdrop { background: rgba(14, 14, 13, 0.96) }
+  .viewer::backdrop { background: color-mix(in srgb, var(--ink) 96%, transparent) }
   .viewer-img {
     width: auto;
     height: auto;
@@ -1109,12 +1097,12 @@
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
+    background: color-mix(in srgb, var(--paper) 12%, transparent);
     color: var(--paper);
     cursor: pointer;
     transition: background-color 160ms ease;
   }
-  .viewer-btn:hover { background: rgba(255, 255, 255, 0.24) }
+  .viewer-btn:hover { background: color-mix(in srgb, var(--paper) 24%, transparent) }
   .viewer-btn:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px }
   .viewer-btn svg { width: 18px; height: 18px }
   .viewer-close { top: 16px; right: 16px }
@@ -1128,7 +1116,7 @@
     bottom: 28px;
     text-align: center;
     font: 500 14px/20px var(--body);
-    color: rgba(255, 255, 255, 0.72);
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
     font-variant-numeric: tabular-nums;
   }
   html:has(.viewer[open]) { overflow: hidden }
@@ -1144,8 +1132,8 @@
      says when on its first row and what it costs at its foot, the saving on one row above the
      price in both, so ₹1,000 and ₹700 line up; night is the client's indigo. Under them, the
      one list of what comes with both, then one line of fine print. */
-  .band-price { padding: 96px var(--gutter); background: var(--lilac) }
-  .price-lede { max-width: 34em; margin-top: 16px; font: 400 17px/28px var(--body); color: #55534D; text-wrap: pretty }
+  .band-price { padding: 96px var(--gutter); background: var(--accent-soft) }
+  .price-lede { max-width: 34em; margin-top: 16px; font: 400 17px/28px var(--body); color: var(--copy); text-wrap: pretty }
   .price-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 400px;
@@ -1162,13 +1150,13 @@
     list-style: none;
   }
   .rate {
-    --soft: #55534D;
+    --soft: var(--copy);
     padding: 28px 32px 32px;
     border-radius: 16px;
     background: var(--paper);
     color: var(--ink);
   }
-  .rate-night { --soft: rgba(255, 255, 255, 0.78); background: var(--indigo); color: var(--paper) }
+  .rate-night { --soft: color-mix(in srgb, var(--paper) 78%, transparent); background: var(--accent); color: var(--paper) }
   .rate-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font: 600 16px/24px var(--body) }
   .rate-name svg { width: 20px; height: 20px }
   .rate-time { margin-left: auto; font: 400 15px/24px var(--body); color: var(--soft) }
@@ -1177,12 +1165,12 @@
   .rate-tag {
     padding: 5px 8px;
     border-radius: 4px;
-    background: var(--indigo);
+    background: var(--accent);
     color: var(--paper);
     font: 600 12px/14px var(--body);
     letter-spacing: 0.01em;
   }
-  .rate-night .rate-tag { background: var(--paper); color: var(--indigo) }
+  .rate-night .rate-tag { background: var(--paper); color: var(--accent) }
   .rate-price { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; margin-top: 12px }
   .rate-figure { font: 700 60px/1 var(--head); letter-spacing: -0.03em }
   .rate-per { font: 500 16px/1 var(--body); color: var(--soft) }
@@ -1204,14 +1192,17 @@
     flex: none;
     width: 16px;
     height: 24px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='%234E4EFF' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat;
+    /* A mask in the accent colour rather than a coloured image, so it follows the theme. */
+    background: var(--accent);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat;
   }
   .price-fine {
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 1px solid rgba(20, 20, 19, 0.12);
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
     font: 400 15px/24px var(--body);
-    color: #55534D;
+    color: var(--copy);
     text-wrap: pretty;
   }
   .price-fine a { color: var(--ink); text-underline-offset: 3px }
@@ -1227,7 +1218,7 @@
     padding: 4px;
     border: 0;
     border-radius: 999px;
-    background: var(--lilac);
+    background: var(--accent-soft);
   }
   .bill-slot label { position: relative; cursor: pointer }
   .bill-slot input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0 }
@@ -1243,7 +1234,7 @@
     transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
   }
   .bill-slot svg { width: 16px; height: 16px }
-  .bill-slot input:checked + span { background: var(--paper); color: var(--indigo); box-shadow: 0 1px 3px rgba(20, 20, 19, 0.18) }
+  .bill-slot input:checked + span { background: var(--paper); color: var(--accent); box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 18%, transparent) }
   .bill-slot input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px }
   .bill-hours { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px }
   .bill-hours-label { font: 500 15px/22px var(--body); color: var(--ink-2) }
@@ -1275,7 +1266,7 @@
     font-variant-numeric: tabular-nums;
     color: var(--ink);
   }
-  .bill-sum { margin-top: 8px; font: 400 14px/20px var(--body); color: #55534D }
+  .bill-sum { margin-top: 8px; font: 400 14px/20px var(--body); color: var(--copy) }
   /* A plain row, not a second box inside the card. */
   .bill-advance {
     display: flex;
@@ -1285,9 +1276,9 @@
     font: 500 15px/22px var(--body);
     color: var(--ink-2);
   }
-  .bill-advance strong { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--indigo) }
+  .bill-advance strong { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--accent) }
   .btn-bill { width: 100%; height: 52px; margin-top: 20px; font-size: 16px }
-  .bill-note { margin-top: 12px; font: 400 13px/19px var(--body); color: #55534D; text-align: center; text-wrap: balance }
+  .bill-note { margin-top: 12px; font: 400 13px/19px var(--body); color: var(--copy); text-align: center; text-wrap: balance }
   html:not(.js) .bill-slot, html:not(.js) .bill-hours { display: none }
 
   /* ---------- questions ---------- */
@@ -1314,7 +1305,7 @@
     margin-top: 40px;
     padding: 24px 76px 26px 28px;
     border-radius: 8px;
-    background: var(--lilac);
+    background: var(--accent-soft);
     color: var(--ink);
     text-decoration: none;
     transition: background-color 200ms ease;
@@ -1333,17 +1324,17 @@
     margin-top: -18px;
     border-radius: 4px;
     background: var(--paper);
-    color: var(--indigo);
+    color: var(--accent);
     transition: background-color 200ms ease, color 200ms ease;
   }
   .faq-ask-go svg { width: 14px; height: 14px }
-  .faq-ask:hover { background: #DCDCF8 }
-  .faq-ask:hover .faq-ask-go { background: var(--indigo); color: var(--paper) }
+  .faq-ask:hover { background: var(--accent-soft-hover) }
+  .faq-ask:hover .faq-ask-go { background: var(--accent); color: var(--paper) }
   .faq-list { grid-column: 7 / span 6; margin: 0; padding: 0; list-style: none }
   .qa { padding: 26px 0 28px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--nav-h) + 24px) }
   .qa:last-child { border-bottom: 1px solid var(--line) }
   .qa h3 { margin: 0; font: 600 20px/1.35 var(--head); letter-spacing: -0.01em; color: var(--ink); text-wrap: balance }
-  .qa p { margin-top: 8px; font: 400 17px/28px var(--body); color: #55534D; text-wrap: pretty }
+  .qa p { margin-top: 8px; font: 400 17px/28px var(--body); color: var(--copy); text-wrap: pretty }
   .qa strong { font-weight: 600; color: var(--ink) }
 
   /* ---------- footer ---------- */
@@ -1387,7 +1378,7 @@
     font: 500 12px/16px var(--body);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #55534D;
+    color: var(--copy);
   }
   .foot-hours, .foot-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none }
   .foot-hours div { display: flex; gap: 10px }
@@ -1571,7 +1562,7 @@
     .rate-per { flex-basis: 100%; margin-top: 6px; font-size: 14px }
     .included { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px }
     .included li { gap: 8px; font-size: 14px; line-height: 20px }
-    .included li::before { width: 14px; height: 20px; background-size: 14px }
+    .included li::before { width: 14px; height: 20px; -webkit-mask-size: 14px; mask-size: 14px }
     .price-incl { margin-top: 28px }
     .price-fine { font-size: 14px; line-height: 22px }
     .bill { display: block; padding: 20px }
@@ -1631,10 +1622,10 @@
     justify-content: space-between;
     height: var(--nav-h);
     padding: 0 var(--gutter);
-    background: rgba(255, 255, 255, 0.82);
+    background: var(--glass);
     -webkit-backdrop-filter: blur(16px) saturate(1.6);
     backdrop-filter: blur(16px) saturate(1.6);
-    box-shadow: 0 1px 0 rgba(20, 20, 19, 0.06);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent);
   }
   .g-bar-act { display: flex; align-items: center; gap: 12px }
   .g-bar .btn-nav { margin-left: 0 }
@@ -1673,9 +1664,9 @@
     color: var(--ink);
   }
   .g-title .g-mask { display: block }
-  .g-title .g-mask + .g-mask { padding-left: 12vw; color: var(--indigo) }
+  .g-title .g-mask + .g-mask { padding-left: 12vw; color: var(--accent) }
   .g-intro-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-top: 48px }
-  .g-lede { max-width: 26em; margin: 0; font: 400 18px/28px var(--body); color: #55534D; text-wrap: pretty }
+  .g-lede { max-width: 26em; margin: 0; font: 400 18px/28px var(--body); color: var(--copy); text-wrap: pretty }
   .g-scroll {
     display: flex;
     align-items: center;
@@ -1719,11 +1710,11 @@
     text-align: left;
     cursor: pointer;
   }
-  .g-open:focus-visible { outline: 2px solid var(--indigo); outline-offset: 4px }
-  .g-frame { display: block; overflow: hidden; border-radius: 4px; background: var(--lilac) }
+  .g-open:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px }
+  .g-frame { display: block; overflow: hidden; border-radius: 4px; background: var(--accent-soft) }
   .g-frame img { display: block; width: 100%; height: auto; transition: scale 1200ms var(--ease-arrive) }
   .g-cap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 12px; padding-top: 14px }
-  .g-no { font: italic 800 11px/1 var(--mark); letter-spacing: 0.06em; color: var(--indigo) }
+  .g-no { font: italic 800 11px/1 var(--mark); letter-spacing: 0.06em; color: var(--accent) }
   .g-name { font: 600 15px/20px var(--body); color: var(--ink) }
   .g-kind { font: 400 13px/20px var(--body); color: var(--ink-3); white-space: nowrap }
   @media (hover: hover) {
@@ -1761,7 +1752,7 @@
     height: 92px;
     margin: -46px 0 0 -46px;
     border-radius: 50%;
-    background: var(--indigo);
+    background: var(--accent);
     color: var(--paper);
     font: 600 14px/1 var(--body);
     pointer-events: none;
@@ -1782,11 +1773,11 @@
     flex-direction: column;
     align-items: center;
     padding: 120px var(--gutter) 128px;
-    background: var(--lilac);
+    background: var(--accent-soft);
     text-align: center;
   }
   .g-end-title { margin: 0; font: 700 clamp(44px, 7vw, 104px)/1 var(--head); letter-spacing: -0.045em; color: var(--ink) }
-  .g-end-line { max-width: 30em; margin-top: 20px; font: 400 17px/28px var(--body); color: #55534D; text-wrap: balance }
+  .g-end-line { max-width: 30em; margin-top: 20px; font: 400 17px/28px var(--body); color: var(--copy); text-wrap: balance }
   .g-end-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 36px }
 
   /* The viewer: the dark room, one picture, the count and the caption, arrows either side
@@ -1807,7 +1798,7 @@
   .g-view::backdrop { background: var(--ink) }
   html:has(.g-view[open]) { overflow: hidden }
   .g-view-top { display: flex; align-items: center; justify-content: space-between; padding: 20px var(--gutter) }
-  .g-view-count { margin: 0; font: italic 800 14px/1 var(--mark); letter-spacing: 0.08em; color: #8C8A83 }
+  .g-view-count { margin: 0; font: italic 800 14px/1 var(--mark); letter-spacing: 0.08em; color: var(--dark-muted) }
   .g-view-count span { color: var(--paper) }
   .g-view-close {
     display: flex;
@@ -1815,7 +1806,7 @@
     gap: 10px;
     height: 40px;
     padding: 0 14px;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
     border-radius: 4px;
     background: none;
     color: var(--paper);
@@ -1846,7 +1837,7 @@
   }
   .g-view-fig figcaption { display: flex; gap: 12px; align-items: baseline; margin-top: 16px }
   .g-view-name { font: 600 15px/20px var(--body) }
-  .g-view-kind { font: 400 13px/20px var(--body); color: #8C8A83 }
+  .g-view-kind { font: 400 13px/20px var(--body); color: var(--dark-muted) }
   :is(.g-view-prev, .g-view-next) {
     position: absolute;
     top: 50%;
@@ -1856,7 +1847,7 @@
     height: 56px;
     margin-top: -28px;
     padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
     border-radius: 50%;
     background: none;
     color: var(--paper);
@@ -1879,13 +1870,13 @@
     overflow: hidden;
     border: 0;
     border-radius: 3px;
-    background: #26251F;
+    background: var(--dark-raised);
     opacity: 0.4;
     cursor: pointer;
     transition: opacity 200ms ease, translate 300ms var(--ease-roll);
   }
   .g-rail button:hover { opacity: 0.8 }
-  .g-rail button[aria-current] { opacity: 1; translate: 0 -4px; box-shadow: 0 0 0 2px var(--indigo) }
+  .g-rail button[aria-current] { opacity: 1; translate: 0 -4px; box-shadow: 0 0 0 2px var(--accent) }
   .g-rail img { display: block; width: 100%; height: 100%; object-fit: cover }
   .g-view :focus-visible { outline: 2px solid var(--paper); outline-offset: 2px }
   @keyframes g-in { from { opacity: 0; scale: 1.04; clip-path: inset(8% 8% 8% 8% round 4px) } to { clip-path: inset(0 round 4px) } }
