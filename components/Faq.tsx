@@ -1,4 +1,4 @@
-import { QUESTIONS } from '@/lib/faq';
+import { QUESTIONS } from '@/content/faq';
 import { QUESTION_HREF } from '@/lib/booking';
 import { PHONE_HUMAN } from '@/lib/site';
 

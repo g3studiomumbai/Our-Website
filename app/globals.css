@@ -3,17 +3,14 @@
      one-glyph file rather than each family's whole Latin Extended file. */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/inter.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD }
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/inter-rupee.woff2) format('woff2'); unicode-range: U+20B9 }
-  /* Montserrat sets every heading on the page, as the client's design does; Fraunces is kept
-     for the menu's links, which are the bar's and stay as they were. */
+  /* Montserrat sets every heading on the page, as the client's design does, and the bar and
+     its menu with them. */
   @font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/montserrat.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD }
-  @font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/fraunces.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD }
   @font-face { font-family: 'Saira'; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/saira-500.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00B7, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026 }
   @font-face { font-family: 'Saira'; font-style: italic; font-weight: 800; font-display: swap; src: url(/fonts/saira-800-italic.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00B7, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026 }
   /* Until the fonts arrive, the hero is set in fonts the phone already has, each scaled to take
      the same room, so the button doesn't jump when the real ones land. Georgia and Arial cover
-     iPhone, Mac and Windows; Noto Serif and Roboto cover Android. */
-  @font-face { font-family: 'Fraunces Georgia'; font-weight: 100 900; src: local('Georgia Bold'), local('Georgia-Bold'); size-adjust: 73.88%; ascent-override: 132.65%; descent-override: 35.19%; line-gap-override: 0% }
-  @font-face { font-family: 'Fraunces Noto'; font-weight: 100 900; src: local('Noto Serif Bold'), local('NotoSerif-Bold'); size-adjust: 75.14%; ascent-override: 130.42%; descent-override: 34.6%; line-gap-override: 0% }
+     iPhone, Mac and Windows; Roboto covers Android. */
   /* Arial Bold scaled to Montserrat's width — the headline's at 700, the section titles' at
      600 — with Montserrat's own ascent (0.968em) and descent (0.251em). */
   @font-face { font-family: 'Montserrat Arial'; font-weight: 100 650; src: local('Arial Bold'), local('Arial-BoldMT'); size-adjust: 107.83%; ascent-override: 89.77%; descent-override: 23.28%; line-gap-override: 0% }
@@ -37,11 +34,16 @@
     --wash: #FCFCFB;
 
     --head: 'Montserrat', 'Montserrat Arial', Arial, sans-serif;
-    --display: 'Fraunces', 'Fraunces Georgia', 'Fraunces Noto', Georgia, serif;
     --body: 'Inter', 'Inter Arial', 'Inter Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --mark: 'Saira', 'Arial Narrow', sans-serif;
 
-    --gutter: 64px;
+    /* The page is designed at 1440 wide, and that is as wide as its content gets: past it,
+       the gutters grow instead, so every section's words, cards and the bar's mark and
+       button keep to one centred 1312 column while the section colours still run edge to
+       edge. vw counts a scrollbar where there is one, which narrows the column by its width
+       and never widens the page. */
+    --max: 1440px;
+    --gutter: max(64px, (100vw - var(--max)) / 2 + 64px);
     --nav-h: 72px;
     --offer-h: 40px;
     --ease: cubic-bezier(0.65, 0, 0.35, 1);
@@ -354,7 +356,7 @@
   }
   .nav-links a {
     padding: 8px 0;
-    font: 500 14px/1 var(--body);
+    font: 500 14px/1 var(--head);
     color: var(--ink-2);
     text-decoration: none;
     white-space: nowrap;
@@ -375,10 +377,9 @@
     margin-right: 11px;
     overflow: hidden;
     white-space: nowrap;
-    font: 400 14px/1 var(--body);
+    font: 500 14px/1 var(--head);
     color: var(--ink-2);
     text-decoration: none;
-    letter-spacing: 0.01em;
   }
   .phone:hover { color: var(--ink) }
   .btn-nav { height: 44px; margin-left: 8px; padding: 0 20px; font-size: 14px; white-space: nowrap }
@@ -497,8 +498,8 @@
     padding: 14px 0 12px;
     color: var(--ink);
     text-decoration: none;
-    font: 600 28px/1 var(--display);
-    letter-spacing: -0.015em;
+    font: 600 26px/1 var(--head);
+    letter-spacing: -0.02em;
     opacity: 0;
     translate: 0 105%;
     transition: opacity 150ms ease, translate 0s linear 150ms;
@@ -511,7 +512,7 @@
   }
   /* The list items clip, so the ring goes inside the link rather than being cut off. */
   .panel-link:focus-visible { outline-offset: -2px }
-  .panel-no { padding-top: 4px; font: 500 11px/1 var(--mark); letter-spacing: 0.08em; color: var(--ink-3); transition: color 200ms ease }
+  .panel-no { flex: none; width: 18px; padding-top: 4px; font: 500 11px/1 var(--mark); letter-spacing: 0.08em; color: var(--ink-3); transition: color 200ms ease }
   .panel-link:hover .panel-no, .panel-link:focus-visible .panel-no { color: var(--ink) }
   .panel-link:hover .roll em, .panel-link:focus-visible .roll em { translate: 0 -100% }
   .panel-foot {
@@ -520,7 +521,7 @@
     justify-content: space-between;
     gap: 8px 16px;
     margin-top: 16px;
-    font: 500 14px/20px var(--body);
+    font: 500 14px/20px var(--head);
     opacity: 0;
     transition: opacity 150ms ease;
   }
@@ -566,7 +567,7 @@
     font: 700 13px/1 var(--head);
     letter-spacing: 0.02em;
   }
-  .offer-run s { opacity: 0.7; text-decoration-thickness: 1.5px }
+  .offer-run s { text-decoration-thickness: 1.5px }
   .offer-run strong { font-weight: 700 }
   .offer-arrow { opacity: 0.8 }
   .offer-dot { padding-left: 16px; font-size: 11px; opacity: 0.6 }
@@ -601,26 +602,8 @@
   }
   .offer-art { position: relative; min-height: 100%; background: var(--lilac) }
   .offer-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20% }
-  .offer-stamp {
-    position: absolute;
-    left: 20px;
-    bottom: 20px;
-    display: grid;
-    place-items: center;
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    background: var(--indigo);
-    color: var(--paper);
-    font: 700 30px/1 var(--head);
-    letter-spacing: -0.03em;
-    text-align: center;
-    rotate: -10deg;
-  }
-  .offer-stamp small { display: block; margin-top: -10px; font: 600 13px/1 var(--body); letter-spacing: 0.08em; text-transform: uppercase }
   .offer-copy { display: flex; flex-direction: column; align-items: flex-start; padding: 48px 40px 36px }
-  .offer-kicker { font: 500 12px/16px var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--indigo) }
-  .offer-title { margin: 12px 0 0; font: 600 34px/1.1 var(--head); letter-spacing: -0.02em; color: var(--ink) }
+  .offer-title { margin: 0; font: 600 34px/1.1 var(--head); letter-spacing: -0.02em; color: var(--ink) }
   .offer-title span { display: block; font-size: 64px; font-weight: 700; letter-spacing: -0.04em; color: var(--indigo) }
   .offer-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 10px; margin-top: 20px; font: 500 18px/1 var(--body); color: var(--ink-2) }
   .offer-price s { color: var(--ink-3); text-decoration-thickness: 1.5px }
@@ -660,7 +643,6 @@
   @keyframes offer-dim { from { opacity: 0 } }
   @keyframes offer-in { from { translate: 0 48px; clip-path: inset(100% 0 0 0 round 16px) } to { clip-path: inset(0 0 0 0 round 16px) } }
   @keyframes offer-word { from { opacity: 0; translate: 0 18px } }
-  @keyframes offer-stamp { from { scale: 0.4; rotate: -40deg; opacity: 0 } }
   @media (prefers-reduced-motion: no-preference) {
     .offer-pop[open]::backdrop { animation: offer-dim 360ms ease }
     .offer-pop[open] .offer-card { animation: offer-in 760ms var(--ease-arrive) }
@@ -670,14 +652,13 @@
     .offer-pop[open] .offer-copy > :nth-child(3) { animation-delay: 360ms }
     .offer-pop[open] .offer-copy > :nth-child(4) { animation-delay: 420ms }
     .offer-pop[open] .offer-copy > :nth-child(n + 5) { animation-delay: 480ms }
-    .offer-pop[open] .offer-stamp { animation: offer-stamp 700ms var(--ease-arrive) 420ms backwards }
   }
 
   /* ---------- hero ---------- */
   .hero {
-    /* The shoots and the clouds are drawn on a 1440-wide grid and scaled to the screen, so
-       each keeps its place at any width. */
-    --stage-w: max(820px, 100cqw);
+    /* The shoots and the clouds are drawn on a 1440-wide grid and scaled to the screen, up
+       to 1440, so each keeps its place at any width. */
+    --stage-w: clamp(820px, 100cqw, var(--max));
     --u: calc(var(--stage-w) / 1440);
     position: relative;
     container-type: inline-size;
@@ -807,6 +788,15 @@
     margin-top: 58px;
   }
   .sky > *, .stage > * { position: absolute }
+  /* Wider than the design, the stage stops growing and sits centred, and the shoots fade out
+     at its edges — otherwise the cards parked off the 1440 stage, waiting to slide in, would
+     be on show either side of it. */
+  @media (min-width: 1500px) {
+    .shoots {
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+      mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+    }
+  }
   .layer { will-change: transform }
 
   .prop {
@@ -956,7 +946,7 @@
      without a line drawn between them: the layout from before the client's round, on their
      lavender. Paper cards, 16px corners, the picture set in at 8px, and the chip is the
      menu's numbering. No button: step one says which button to tap. */
-  .band-steps { margin-top: 10px; padding: 96px var(--gutter); background: var(--lavender) }
+  .band-steps { padding: 96px var(--gutter); background: var(--lavender) }
   .steps-title, .space-title, .price-title, .faq-title {
     margin: 0;
     font: 600 48px/1.1 var(--head);
@@ -1006,7 +996,6 @@
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--col-gap);
     padding: 96px var(--gutter);
-    border-bottom: 1px solid var(--line);
   }
   .space .strip { grid-row: 1; grid-column: 1 / span 8 }
   .space-copy {
@@ -1155,7 +1144,7 @@
      says when on its first row and what it costs at its foot, the saving on one row above the
      price in both, so ₹1,000 and ₹700 line up; night is the client's indigo. Under them, the
      one list of what comes with both, then one line of fine print. */
-  .band-price { margin-top: 10px; padding: 96px var(--gutter); background: var(--lilac) }
+  .band-price { padding: 96px var(--gutter); background: var(--lilac) }
   .price-lede { max-width: 34em; margin-top: 16px; font: 400 17px/28px var(--body); color: #55534D; text-wrap: pretty }
   .price-layout {
     display: grid;
@@ -1528,7 +1517,7 @@
     .mark { height: 36px; padding-inline: 8px; font-size: 16px }
     .menu-btn { width: 40px; height: 40px }
     .btn-nav { height: 40px; padding: 0 14px; font-size: 13px }
-    .panel-link { font-size: 26px }
+    .panel-link { font-size: 24px }
 
     .hero-copy { padding-top: 72px }
     .eyebrow { font-size: 12px; line-height: 16px }
@@ -1600,7 +1589,6 @@
     .offer { font-size: 13px }
     .offer-card { grid-template-columns: minmax(0, 1fr) }
     .offer-art { min-height: 150px }
-    .offer-stamp { left: auto; right: 16px; bottom: -28px; width: 80px; height: 80px; font-size: 25px }
     .offer-copy { padding: 28px 22px 20px }
     .offer-title { font-size: 26px }
     .offer-title span { font-size: 48px }

@@ -8,10 +8,12 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { HOME_PRELOAD, SHOTS } from '@/lib/gallery';
+import { SHOTS, SHOT_SIZES } from '@/content/gallery';
+import { HOME_PRELOAD } from '@/content/hero';
 import { inr } from '@/lib/booking';
 import { RATE } from '@/lib/site';
 import { Mark } from '../Mark';
+import { Photo, photoUrl } from '../Photo';
 import { BookingLink } from './BookingProvider';
 import { CurtainLink, useCurtainPhase } from './Curtain';
 
@@ -232,7 +234,7 @@ export function Gallery() {
           </div>
         </section>
 
-        <ul className="g-grid" ref={grid}>
+        <ul className="g-grid" ref={grid} data-track-view="Gallery">
           {SHOTS.map((shot, i) => (
             <li className="g-item" key={shot.src} style={{ '--i': i % 3 } as CSSProperties}>
               <button
@@ -242,11 +244,10 @@ export function Gallery() {
                 onClick={() => setAt(i)}
               >
                 <span className="g-frame">
-                  <img
+                  <Photo
                     src={shot.src}
                     alt={shot.alt}
-                    width={shot.width}
-                    height={shot.height}
+                    sizes={SHOT_SIZES}
                     loading={i < 6 ? 'eager' : 'lazy'}
                     decoding="async"
                     draggable={false}
@@ -364,7 +365,7 @@ function Viewer({ at, onMove }: { at: number | null; onMove: (at: number | null)
           </div>
 
           <figure className="g-view-fig" key={at} onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
-            <img src={shot.full ?? shot.src} alt={shot.alt} width={shot.width} height={shot.height} draggable={false} />
+            <img src={photoUrl(shot.src)} alt={shot.alt} draggable={false} />
             <figcaption>
               <span className="g-view-name">{shot.title}</span>
               <span className="g-view-kind">{shot.kind}</span>
@@ -391,7 +392,7 @@ function Viewer({ at, onMove }: { at: number | null; onMove: (at: number | null)
                   aria-current={i === at || undefined}
                   onClick={() => onMove(i)}
                 >
-                  <img src={item.src} alt="" width={item.width} height={item.height} loading="lazy" />
+                  <Photo src={item.src} alt="" sizes="40px" loading="lazy" />
                 </button>
               </li>
             ))}

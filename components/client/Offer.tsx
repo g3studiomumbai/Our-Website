@@ -3,11 +3,19 @@
 import { useEffect, useRef } from 'react';
 import { OFFER_HREF, inr } from '@/lib/booking';
 import { DAY_OFF, DAY_RATE_WAS, RATE, SHORTEST_BOOKING } from '@/lib/site';
+import { LEAD_SHOOT } from '@/content/hero';
+import { Photo } from '../Photo';
+import { track } from './Tracking';
 
 /** Once a visit: a reader who closed it is not shown it again until the next one. */
 const SEEN = 'g3-offer-seen';
-/** How long after the page arrives the popup waits, so the headline is read first. */
-const WAIT = 4000;
+/**
+ * How far down the page the popup waits for: until the hero's bottom edge has risen past
+ * this share of the screen, so the visitor has read the headline and chosen to go on.
+ */
+const PAST_HERO = 0.5;
+/** A beat after that point is reached, so it does not land in the middle of a flick. */
+const PAUSE = 450;
 /** How many times the offer runs in one half of the strip: enough to fill a wide screen. */
 const RUNS = 6;
 
@@ -26,8 +34,8 @@ function OfferRun() {
 
 /**
  * The client's offer, for visitors coming in from their ads: a strip at the very top of the
- * page, above the bar, that runs right to left, and a popup that opens once a visit, a few seconds after the page has
- * arrived. The strip opens the popup too, at any time.
+ * page, above the bar, that runs right to left, and a popup that opens once a visit, as the
+ * visitor scrolls on past the hero. The strip opens the popup too, at any time.
  *
  * The strip is one button. What it runs is a picture of the offer, hidden from assistive
  * tech, with the same offer said once in words. It stops under the mouse and on focus, and
@@ -42,33 +50,44 @@ export function Offer() {
     if (!dialog || dialog.open) return;
     returnTo.current = document.activeElement as HTMLElement | null;
     dialog.showModal();
+    track('ViewContent', { content_name: 'Offer popup' });
     try {
       sessionStorage.setItem(SEEN, '1');
     } catch {}
   }
 
-  // Opens on its own once a visit, after the loader has lifted (or straight away when it
-  // did not show) and a pause, and only if nothing else is open by then.
+  // Opens on its own once a visit, when the visitor scrolls on past the hero — never over
+  // the headline on arrival — once the loader has gone, and only if nothing else is open.
+  // If something is, it waits for the next scroll.
   useEffect(() => {
     try {
       if (sessionStorage.getItem(SEEN)) return;
     } catch {}
     const root = document.documentElement;
+    const hero = document.querySelector('.hero');
     let timer = 0;
     const arrived = () =>
       root.classList.contains('no-loader') || root.classList.contains('is-revealed');
-    function wait() {
-      if (!arrived()) {
-        timer = window.setTimeout(wait, 200);
-        return;
-      }
+    const past = () =>
+      hero
+        ? hero.getBoundingClientRect().bottom < innerHeight * PAST_HERO
+        : scrollY > innerHeight;
+    function check() {
+      if (timer || !arrived() || !past()) return;
       timer = window.setTimeout(() => {
-        const busy = document.querySelector('dialog[open], .nav.is-open');
-        if (!busy) show();
-      }, WAIT);
+        timer = 0;
+        if (document.querySelector('dialog[open], .nav.is-open')) return;
+        removeEventListener('scroll', check);
+        show();
+      }, PAUSE);
     }
-    wait();
-    return () => clearTimeout(timer);
+    addEventListener('scroll', check, { passive: true });
+    // A reload partway down the page is already past the hero.
+    check();
+    return () => {
+      removeEventListener('scroll', check);
+      clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -112,12 +131,13 @@ export function Offer() {
               <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
           </button>
+          {/* Each fact once, read top to bottom: what the offer is, what it costs, when it
+              applies and what comes with it, then the one thing to do. The photo is the
+              mood, so it carries no words of its own. */}
           <div className="offer-art" aria-hidden="true">
-            <img src="/assets/shoot-3.webp" alt="" width={599} height={934} loading="lazy" />
-            <span className="offer-stamp">{`${DAY_OFF}%`}<small>off</small></span>
+            <Photo src={LEAD_SHOOT} alt="" sizes="(max-width: 640px) 100vw, 340px" loading="lazy" />
           </div>
           <div className="offer-copy">
-            <p className="offer-kicker">Day rate offer</p>
             <h2 className="offer-title" id="offer-title">
               <span>{`${DAY_OFF}% OFF`}</span> the day rate
             </h2>
@@ -135,7 +155,12 @@ export function Offer() {
             <p className="offer-note">
               {`7 AM to 9 PM · ${SHORTEST_BOOKING}-hour minimum · lights, props and 2 backdrops included`}
             </p>
-            <a className="btn btn-offer" href={OFFER_HREF}>
+            <a
+              className="btn btn-offer"
+              href={OFFER_HREF}
+              data-track="Lead"
+              data-track-name="Day rate offer"
+            >
               Claim it on WhatsApp
             </a>
             <button className="offer-later" type="button" onClick={close}>

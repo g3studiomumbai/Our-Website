@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import {
   DESCRIPTION,
+  SHARE_IMAGE,
   SHARE_IMAGE_ALT,
   SITE_URL,
   STUDIO_NAME,
@@ -10,6 +11,7 @@ import { faqSchema, jsonLd, localBusinessSchema } from '@/lib/schema';
 import { Reveals } from '@/components/client/Reveals';
 import { BookingProvider } from '@/components/client/BookingProvider';
 import { Curtain } from '@/components/client/Curtain';
+import { Tracking } from '@/components/client/Tracking';
 import './globals.css';
 
 /**
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     url: '/',
     images: [
       {
-        url: '/assets/share.jpg',
+        url: SHARE_IMAGE,
         width: 1200,
         height: 630,
         alt: SHARE_IMAGE_ALT,
@@ -38,6 +40,14 @@ export const metadata: Metadata = {
     ],
   },
   twitter: { card: 'summary_large_image' },
+  // Proof of ownership for Google Search Console and Meta Business, each written only once
+  // its code is set in Vercel's environment variables. See UPDATING.md.
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION
+      ? { 'facebook-domain-verification': process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION }
+      : undefined,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },
@@ -72,6 +82,13 @@ document.documentElement.classList.add('js');
     root.classList.add('no-loader');
     return;
   }
+  // Someone arriving from an ad (Meta adds fbclid, Google gclid, campaigns utm_) came for
+  // the offer they clicked, and every one of them is a first visit: two seconds of loader
+  // is two seconds of bounce. They go straight in.
+  if (/[?&](fbclid|gclid|utm_[a-z]+)=/.test(location.search)) {
+    root.classList.add('no-loader');
+    return;
+  }
   try {
     var since = Date.now() - (+localStorage.getItem('g3-loader-shown') || 0);
     // since < 0 means the clock was set back: show it, rather than hide it for however long
@@ -89,12 +106,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-IN" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: BEFORE_PAINT }} />
-        {/* The headline's face and the body's. Fraunces is left to load on its own: only
-            the menu's links are set in it now. The shoot in the middle is the largest
-            thing in the first screen. */}
+        {/* The headline's face, which the bar shares, and the body's. The shoot in the middle, the largest thing
+            in the first screen, is preloaded by React from its fetchPriority="high" <img>,
+            srcset and all, so the copy fetched early is the copy it shows. */}
         <link rel="preload" href="/fonts/montserrat.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="" />
-        <link rel="preload" as="image" href="/assets/shoot-3.webp" fetchPriority="high" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd(localBusinessSchema()) }}
@@ -115,6 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </BookingProvider>
 
         <Reveals />
+        <Tracking />
       </body>
     </html>
   );

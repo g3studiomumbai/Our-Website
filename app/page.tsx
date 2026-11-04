@@ -10,6 +10,7 @@ import { Space } from '@/components/Space';
 import { Pricing } from '@/components/Pricing';
 import { Faq } from '@/components/Faq';
 import { BROCHURE_ASK_HREF, BROCHURE_PDF } from '@/lib/booking';
+import { OFFER_ON } from '@/lib/site';
 
 /**
  * One page, one job: produce a WhatsApp enquiry. It is fully static — no server work, no
@@ -30,7 +31,7 @@ export default function Page() {
     <>
       <Loader />
       {/* The client's offer, above the bar: a strip, and the popup it opens. */}
-      <Offer />
+      {OFFER_ON && <Offer />}
       <SiteHeader />
       <main id="top">
         <Hero brochure={brochure} />

@@ -15,7 +15,9 @@ import { usePathname, useRouter } from 'next/navigation';
 
 /** Where the curtain is: off the page, coming down over it, or going up off the next one. */
 export type Phase = 'idle' | 'cover' | 'lift';
-type Go = (href: string, label: string, preload: string[]) => void;
+/** A photo to load ahead, offered as the page will offer it, so the same copy is chosen. */
+export type Preload = { src: string; srcSet: string; sizes: string };
+type Go = (href: string, label: string, preload: Preload[]) => void;
 
 /** Two contexts, so the links — one of them inside the hero, which must never re-render —
  *  hold a function that never changes, and only the pages that ask hear about the phase. */
@@ -29,9 +31,12 @@ const MAX = 6000; // a slow connection must never hold the curtain shut
 
 const bare = (path: string) => path.replace(/\/+$/, '') || '/';
 
-function preload(src: string) {
+function preload({ src, srcSet, sizes }: Preload) {
   return new Promise<void>((resolve) => {
     const img = new Image();
+    // sizes and srcset before src, or the browser starts on src before it knows the choice.
+    img.sizes = sizes;
+    img.srcset = srcSet;
     img.src = src;
     img.decode().then(resolve, resolve);
   });
@@ -81,7 +86,7 @@ export function Curtain({ children }: { children: ReactNode }) {
       let shown = 0;
       let left = false;
       const total = Math.max(images.length, 1);
-      const all = Promise.all(images.map((src) => preload(src).then(() => void loaded++)));
+      const all = Promise.all(images.map((image) => preload(image).then(() => void loaded++)));
       let ready = false;
       all.then(() => (ready = true));
 
@@ -180,7 +185,7 @@ type CurtainLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   /** The word the curtain fills while it loads, e.g. "Gallery". */
   label: string;
   /** What the next page shows first, waited for before the curtain lifts. */
-  preload: string[];
+  preload: Preload[];
 };
 
 /**

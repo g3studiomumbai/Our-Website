@@ -2,11 +2,14 @@
 
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import { BOOKING_HREF, composeMessage, whatsappHref, type Priced } from '@/lib/booking';
+import { RATE } from '@/lib/site';
 
 type BookingValue = {
   setPriced: (priced: Priced) => void;
   /** The WhatsApp link every "Check available slots" button carries. */
   href: string;
+  /** What the hours priced in the bill come to, or 0 before any are. */
+  value: number;
 };
 
 const BookingContext = createContext<BookingValue | null>(null);
@@ -24,6 +27,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     () => ({
       setPriced,
       href: priced.hours ? whatsappHref(composeMessage(priced)) : BOOKING_HREF,
+      value: priced.hours && priced.slot ? RATE[priced.slot] * priced.hours : 0,
     }),
     [priced],
   );
@@ -38,9 +42,16 @@ export function useBooking(): BookingValue {
 
 /** A "Check available slots" button: the bar's, the hero's and the bill's. */
 export function BookingLink({ className, children }: { className: string; children: ReactNode }) {
-  const { href } = useBooking();
+  const { href, value } = useBooking();
+  // Reported to Meta as a Lead, with the bill's total once hours are priced. See Tracking.tsx.
   return (
-    <a className={className} href={href}>
+    <a
+      className={className}
+      href={href}
+      data-track="Lead"
+      data-track-name="Check available slots"
+      data-track-value={value || undefined}
+    >
       {children}
     </a>
   );

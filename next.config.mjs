@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 
-// The page is one static route with no server work in it, so it ships as files.
-// `trailingSlash` makes the export write `out/index.html` rather than a directory
-// index that only some hosts resolve — and it is that file the Figma build reads.
+// Every page is prerendered to HTML at build time; the one piece of server work is
+// app/api/meta, which passes ad events on to Meta's Conversions API. That route is why
+// this is a normal Next.js build on Vercel rather than a static export to out/.
+// `trailingSlash` keeps the URLs the site has always had: /gallery/, not /gallery.
 const nextConfig = {
-  output: 'export',
   trailingSlash: true,
   images: {
-    // Nothing here is served through the image optimiser: see components/client/Hero.tsx
-    // for why the photography stays on plain <img>.
+    // Nothing here is served through the image optimiser: the photos are sized ahead of
+    // time by scripts/images.mjs. See components/Photo.tsx.
     unoptimized: true,
   },
 };

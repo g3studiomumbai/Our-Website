@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Footer } from '@/components/Footer';
 import { Gallery } from '@/components/client/Gallery';
-import { SHARE_IMAGE_ALT, STUDIO_NAME } from '@/lib/site';
+import { SHARE_IMAGE, SHARE_IMAGE_ALT, STUDIO_NAME } from '@/lib/site';
 
 const TITLE = `Gallery — ${STUDIO_NAME}, Jogeshwari West`;
 const DESCRIPTION =
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     url: '/gallery/',
-    images: [{ url: '/assets/share.jpg', width: 1200, height: 630, alt: SHARE_IMAGE_ALT }],
+    images: [{ url: SHARE_IMAGE, width: 1200, height: 630, alt: SHARE_IMAGE_ALT }],
   },
 };
 

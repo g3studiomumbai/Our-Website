@@ -4,7 +4,7 @@
  *
  * Why this exists: `figma_html` reads a single document and skips <link> entirely —
  * "External stylesheets and remote images are not fetched" — while `next build` emits the
- * CSS as separate files. Handing it `out/index.html` as-is would not fail; it would build
+ * CSS as separate files. Handing it the built index.html as-is would not fail; it would build
  * the whole page unstyled and say nothing, which is the worst kind of wrong. So the
  * emitted CSS is folded back into one <style> block, in document order, and the cascade
  * the builder reads is the one the browser reads.
@@ -21,7 +21,8 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const source = path.join(root, 'out', 'index.html');
+// next build prerenders the home page here, and writes the CSS it links under .next/static.
+const source = path.join(root, '.next', 'server', 'app', 'index.html');
 const outDir = path.join(root, 'figma');
 const target = path.join(outDir, 'index.html');
 const withImages = process.argv.includes('--with-images');
@@ -55,7 +56,7 @@ if (!hrefs.length) {
 
 const sheets = [];
 for (const href of hrefs) {
-  const file = path.join(root, 'out', href.replace(/^\//, '').split('?')[0]);
+  const file = path.join(root, '.next', href.replace(/^\/_next\//, '').split('?')[0]);
   if (!existsSync(file)) {
     console.error('Linked stylesheet is missing from the build: ' + file);
     process.exit(1);
@@ -72,7 +73,7 @@ for (const link of links) {
 
 let inlined = 0;
 if (withImages) {
-  const assets = [...new Set([...html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g)].map((m) => m[1]))];
+  const assets = [...new Set([...html.matchAll(/(?:src|href)="(\/images\/[^"]+)"/g)].map((m) => m[1]))];
   for (const asset of assets) {
     const file = path.join(root, 'public', asset.replace(/^\//, ''));
     const mime = MIME[path.extname(asset).toLowerCase()];

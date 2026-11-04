@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { SETS } from '@/lib/sets';
+import { SETS, SET_SIZES } from '@/content/sets';
+import { Photo, photoUrl } from '../Photo';
 
 /** How fast the strip drifts on its own, in pixels a second. */
 const DRIFT = 36;
@@ -42,6 +43,11 @@ export function Sets() {
 
   const set = SETS[at];
 
+  /** The copy of set i the strip has already loaded, whichever size the browser chose. */
+  const thumbOf = (i: number) =>
+    trackRef.current?.querySelectorAll<HTMLImageElement>('.set img')[i]?.currentSrc ||
+    photoUrl(SETS[i].src);
+
   /**
    * What the viewer shows: nothing at all until it is opened, then the strip's copy —
    * already loaded, so it appears at once — and the full-size file in its place once that
@@ -52,7 +58,7 @@ export function Sets() {
    * dialog they have not opened. Deriving it from `at` rather than storing it also means
    * there is never a frame showing the previously viewed set.
    */
-  const showing = open ? (ready[at] ? set.full : set.thumb) : undefined;
+  const showing = open ? (ready[at] ? photoUrl(set.src) : thumbOf(at)) : undefined;
 
   // Only `at` and `open` belong in here. With `ready` as a dependency, one set finishing
   // its decode re-ran this and cancelled the decode in flight for the set now on screen —
@@ -62,7 +68,7 @@ export function Sets() {
     if (!open) return;
     let cancelled = false;
     const full = new Image();
-    full.src = SETS[at].full;
+    full.src = photoUrl(SETS[at].src);
     full.decode().then(
       () => {
         if (!cancelled) setReady((was) => (was[at] ? was : { ...was, [at]: true }));
@@ -277,11 +283,10 @@ export function Sets() {
                   tabIndex={copy ? -1 : undefined}
                   onClick={(e) => openAt(i, e.currentTarget)}
                 >
-                  <img
-                    src={item.thumb}
+                  <Photo
+                    src={item.src}
                     alt={copy ? '' : item.alt}
-                    width={600}
-                    height={900}
+                    sizes={SET_SIZES}
                     loading="lazy"
                     draggable={false}
                   />

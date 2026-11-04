@@ -1,10 +1,13 @@
-import { QUESTIONS, answerText } from './faq';
+import { QUESTIONS, answerText } from '@/content/faq';
 import {
   ADDRESS,
   DESCRIPTION,
+  GEO,
+  INCLUDED,
   MAPS_HREF,
   PHONE_SCHEMA,
   RATE,
+  SHARE_IMAGE,
   SHORTEST_BOOKING,
   SITE_URL,
   STUDIO_NAME,
@@ -49,10 +52,9 @@ function hireOffer(name: string, price: number, hours: string) {
  * PhotographyBusiness, a LocalBusiness subtype — more specific than LocalBusiness, and
  * what this actually is.
  *
- * The address is the client's, as it appears in the footer. There is still no `geo`: nobody
- * has given coordinates, and a pin guessed from the street would be a plausible-sounding
- * invention. Rich Results reports it as a missing *recommended* field, not an error.
- * Everything here is on the page.
+ * The address is the client's, as it appears in the footer; `geo` is the pin of their own
+ * Google Business listing, and `sameAs` names that listing, which ties this site and the
+ * listing together as one business. Everything here is on the page.
  */
 export function localBusinessSchema() {
   return {
@@ -63,7 +65,7 @@ export function localBusinessSchema() {
     description: DESCRIPTION,
     url: SITE_URL + '/',
     telephone: PHONE_SCHEMA,
-    image: SITE_URL + '/assets/share.jpg',
+    image: SITE_URL + SHARE_IMAGE,
     priceRange: '₹700–₹1,000 per hour',
     currenciesAccepted: 'INR',
     address: {
@@ -74,7 +76,9 @@ export function localBusinessSchema() {
       addressRegion: 'Maharashtra',
       addressCountry: 'IN',
     },
+    geo: { '@type': 'GeoCoordinates', ...GEO },
     hasMap: MAPS_HREF,
+    sameAs: [MAPS_HREF],
     areaServed: { '@type': 'City', name: 'Mumbai' },
     // Day 07:00–21:00 and night 21:00–07:00. The night window closes the following
     // morning, which is what a closing time earlier than its opening time means.
@@ -96,19 +100,9 @@ export function localBusinessSchema() {
       hireOffer('Day studio hire', RATE.day, '7 AM to 9 PM'),
       hireOffer('Night studio hire', RATE.night, '9 PM to 7 AM'),
     ],
-    amenityFeature: [
-      'Full lighting gear',
-      '2 backdrops',
-      'All props and furniture',
-      'AC',
-      'Makeup & changing room',
-      'Washrooms',
-      'WiFi',
-      'Power backup',
-      'Parking for 2+ cars',
-    ].map((name) => ({
+    amenityFeature: INCLUDED.map((name) => ({
       '@type': 'LocationFeatureSpecification',
-      name,
+      name: name.replace(/\u00a0/g, ' '),
       value: true,
     })),
   };

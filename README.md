@@ -16,13 +16,51 @@ port**), so for anything listed there this folder is the answer, not that file.
 npm install
 npm run dev           # localhost:3000
 
-npm run build         # static export to out/
-npm run figma         # out/ -> figma/index.html, one self-contained file
+npm run build         # prerenders every page to .next/ (photos are resized first)
+npm run start         # serve that build locally
+npm run figma         # built home page -> figma/index.html, one self-contained file
 ```
+
+**To change content or photos, see [UPDATING.md](UPDATING.md).** Live at
+https://g3-website-pi.vercel.app, deployed by Vercel from `main`.
 
 ## What the client changed
 
-Five rounds so far. The latest is first.
+Six rounds so far. The latest is first.
+
+**6. Ready to run ads, and easy to update** (2026-11-04):
+
+- **The live site's links pointed at localhost.** `NEXT_PUBLIC_SITE_URL` was never
+  set on Vercel, so the canonical, the share image, the sitemap and robots.txt all
+  named `http://localhost:3000`. It is now in `.env.production`, with Vercel's own
+  production address as a fallback.
+- **Meta Pixel and Conversions API**, built in and off until
+  `NEXT_PUBLIC_META_PIXEL_ID` and `META_CAPI_TOKEN` are set in Vercel: PageView,
+  ViewContent (pricing, gallery, offer popup), Lead (every booking button with the
+  bill's total, the offer, the brochure) and Contact (other WhatsApp and phone links),
+  each sent from the browser and from `app/api/meta` under one event ID. That route
+  is why the site is now a normal Next.js build rather than a static export.
+- **Ad visitors skip the loader** (`fbclid`, `gclid`, `utm_` in the link).
+- **Phones get smaller photos.** Originals live in `public/images/<section>/`;
+  `scripts/images.mjs` makes 400/800/1200 copies before every build and
+  `components/Photo.tsx` offers them in `srcset`.
+- **Content in one place:** `content/` holds the studio facts, hero, steps, sets,
+  gallery and FAQ; `OFFER_ON` switches the offer off everywhere. See UPDATING.md.
+- "See more" now reads "See more shoots" (a link's text should say where it goes);
+  the struck-out ₹3,500 in the strip is full white, for contrast.
+- Optional Search Console and Meta domain-verification tags, set from Vercel.
+- **Wide screens:** content stops at the 1440 design width (`--max`); past it the
+  gutters grow, section colours still run edge to edge, and the hero's stage stops
+  scaling, its shoots fading out at the stage's edges.
+- **The popup opens on scroll**, once the hero's bottom passes the middle of the
+  screen, instead of four seconds after arrival — never over the headline.
+- **The popup says each thing once:** "70% OFF the day rate", the price, when and
+  what's included, then the button. The "Day rate offer" kicker and the 70% stamp on
+  the photo, which repeated the heading, are gone.
+- **The bar and its menu are set in Montserrat**, like every heading. Fraunces is
+  gone (one 66 KB font fewer on every visit).
+- **Directions** open the studio's Google Business listing, whose pin also gives the
+  structured data its `geo`.
 
 **5. A gallery** (2026-11-02):
 
@@ -177,7 +215,7 @@ reads that.** Design and code still cannot drift apart.
 It is not free, and not for the reason the brief assumed. `figma_html` skips
 `<link>` entirely — "External stylesheets and remote images are not fetched" —
 while `next build` emits the CSS as a separate file. Handing the builder
-`out/index.html` as it comes would not fail: it would build the whole page
+the built `index.html` as it comes would not fail: it would build the whole page
 **unstyled**, and say nothing. So `npm run figma` folds the emitted CSS back into
 one `<style>` block, in document order, and refuses to write a file if it finds
 no stylesheet to inline.
@@ -188,8 +226,8 @@ Two consequences worth knowing before anyone changes the styling:
   not Tailwind. Hashed class names and a cascade scattered across components
   would survive the inlining but arrive in Figma as noise. `app/globals.css` is
   the original `<style>` block, carried over verbatim.
-- **The static export is also the SEO artifact.** The file Figma reads is the
-  file a crawler reads, so the view-source check and the Figma check are the
+- **The prerendered page is also the SEO artifact.** The file Figma reads is the
+  HTML a crawler is served, so the view-source check and the Figma check are the
   same check.
 
 ```bash
@@ -207,22 +245,26 @@ draws for a path it will not fetch. It roughly triples the file.
 ## Where things live
 
 ```
+content/            what the page says: studio (facts, rates, offer), hero, steps,
+                    sets, gallery, faq — see UPDATING.md
+public/images/      the photos, a folder per section; _sized/ is made by the build
 app/
   layout.tsx        metadata, JSON-LD, fonts, the before-paint loader script, the curtain
   page.tsx          the home page: loader, offer, bar, the sections in order, footer
   gallery/page.tsx  the gallery
-  globals.css       the original stylesheet, verbatim
+  api/meta/         the Conversions API relay
+  globals.css       the stylesheet
   sitemap.ts  robots.ts
-components/         Steps, Space, Pricing, Faq, Footer, Loader, Mark, icons
+components/         Steps, Space, Pricing, Faq, Footer, Loader, Mark, Photo, icons
 components/client/  Hero, Sets, Bill, Offer, SiteHeader, Reveals, BookingProvider,
-                    Curtain, Gallery
+                    Curtain, Gallery, Tracking
                     use-parallax, use-carousel, motion
-lib/                booking (the messages), site (the facts), faq, sets, gallery, schema
-scripts/            figma-html.mjs, serve-static.mjs
+lib/                booking (the messages), site (the URL), meta, schema
+scripts/            images.mjs, figma-html.mjs, serve-static.mjs
 ```
 
 Everything is a Server Component except the hero and the interactive islands.
-The page is `output: 'export'` — no server, no client-side fetching.
+Every page is prerendered at build time; the only server code is `app/api/meta`.
 
 ## Things that look like noise and are not
 
@@ -269,9 +311,10 @@ The page is `output: 'export'` — no server, no client-side fetching.
   lettering, traced from their PDF; its `alt` is the words.
 - **The hero layers are plain `<img>`.** The parallax maths is measured off the
   real box against a 1440px grid; `next/image` rewrites sizing. The rest of the
-  photography is plain `<img>` too — with `output: 'export'` there is no image
-  optimiser, so `next/image` would add markup to elements the stylesheet already
-  sizes and give nothing back.
+  photography is plain `<img>` too — the photos are resized ahead of time by
+  `scripts/images.mjs` and offered through `srcset` (`components/Photo.tsx`), so
+  `next/image` would add markup to elements the stylesheet already sizes and give
+  nothing back.
 - **The footer wordmark is `cqw`, never `vw`.** `vw` counts the scrollbar; it
   overflowed and put a horizontal scrollbar on the page. `.foot` keeps
   `overflow: hidden` as the guard.
@@ -330,9 +373,8 @@ The FAQ schema is built from `lib/faq.ts`, the same copy the section renders, so
 the two cannot drift.
 
 The business schema carries the client's address (`streetAddress`,
-`postalCode`) and `hasMap`. It still has **no `geo`**: nobody has given
-coordinates, and a pin guessed from the street would be an invention. Rich
-Results reports it as a missing *recommended* field, not an error. No
+`postalCode`), and `geo`, `hasMap` and `sameAs` from their Google Business
+listing (`MAPS_HREF` and `GEO` in `content/studio.ts`). No
 `aggregateRating` and no `review`: there are no reviews yet, and inventing them
 is a manual-action risk.
 
@@ -341,19 +383,16 @@ transparency is the differentiator.
 
 ## Before it ships
 
-1. **`NEXT_PUBLIC_SITE_URL`** — required. Without it the canonical, `og:url` and
-   `og:image` all point at `localhost`, and WhatsApp ignores a share image that
-   is not absolute. See `.env.example`. The build warns if it is unset.
+1. **`NEXT_PUBLIC_SITE_URL`** — set in `.env.production` to the Vercel address.
+   Change it when the studio has its own domain.
 2. **The struck-out ₹3,500.** Confirm it is a rate the studio really charged
    before it goes live; a struck-out price that never was is a misleading one.
    The "70% off" beside it is the client's figure (the true saving is 71.4%).
 3. **The brochure.** Save the client's PDF as `public/g3-studio-brochure.pdf`
    and rebuild; Get Brochure opens it in a new tab. Until then it asks for the
    brochure on WhatsApp.
-4. **Directions.** The footer's Google Maps link is built from the address. If
-   the studio has a Google Business listing, its share link is the better
-   target (`MAPS_HREF` in `lib/site.ts`), and its coordinates would let the
-   schema carry `geo`.
+4. **Meta IDs.** The Pixel and Conversions API are built in and off until
+   `NEXT_PUBLIC_META_PIXEL_ID` and `META_CAPI_TOKEN` are set in Vercel.
 
 The logo strip left the page in the client's second round, and the testimonial
 slot beside the bill in the fourth. Anything else that

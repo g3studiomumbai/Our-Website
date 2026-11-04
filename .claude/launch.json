@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "export",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["scripts/serve-static.mjs", "out", "4182"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start", "--", "--port", "4182"],
       "port": 4182
     },
     {

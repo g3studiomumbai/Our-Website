@@ -1,46 +1,14 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
-import { GALLERY_PRELOAD } from '@/lib/gallery';
+import { GALLERY_PRELOAD } from '@/content/gallery';
+import { SHOOTS, SHOOT_SIZES } from '@/content/hero';
+import { Photo } from '../Photo';
 import { BookingLink } from './BookingProvider';
 import { CurtainLink } from './Curtain';
 import { createMotionStore } from './motion';
 import { useParallax } from './use-parallax';
 import { useCarousel } from './use-carousel';
-
-/** The client's shoots, left to right as their page shows them, the portrait in the middle. */
-const SHOOTS = [
-  {
-    src: '/assets/shoot-1.webp',
-    alt: 'A model in a blush sherwani between two embroidered ivory sherwanis on stands',
-    width: 608,
-    height: 826,
-  },
-  {
-    src: '/assets/shoot-2.webp',
-    alt: 'A man in an orange linen shirt seated with a mug in warm light',
-    width: 584,
-    height: 982,
-  },
-  {
-    src: '/assets/shoot-3.webp',
-    alt: 'A model in an embroidered linen shirt against a brown backdrop',
-    width: 599,
-    height: 934,
-  },
-  {
-    src: '/assets/shoot-4.webp',
-    alt: 'A model in a pink printed kurta and dupatta beside a softbox',
-    width: 584,
-    height: 957,
-  },
-  {
-    src: '/assets/shoot-5.webp',
-    alt: 'Gold necklaces, bangles and earrings shot among roses and petals',
-    width: 583,
-    height: 913,
-  },
-];
 
 /**
  * Where each card starts. The five shoots are on stage, the middle one large; their repeats
@@ -146,6 +114,8 @@ export function Hero({ brochure }: { brochure: Brochure }) {
           <a
             className="btn btn-line"
             href={brochure.href}
+            data-track="Lead"
+            data-track-name="Get Brochure"
             {...(brochure.file ? { target: '_blank', rel: 'noopener' } : {})}
           >
             Get Brochure
@@ -158,16 +128,16 @@ export function Hero({ brochure }: { brochure: Brochure }) {
           as near). */}
       <div className="sky" aria-hidden="true">
         <div className="prop layer cloud cloud-3" data-speed="-0.22" data-depth="10" data-drift="0.04">
-          <img src="/assets/cloud-3.webp" alt="" width={230} height={182} />
+          <img src="/images/decor/cloud-3.webp" alt="" width={230} height={182} />
         </div>
         <div className="prop layer cloud cloud-4" data-speed="-0.12" data-depth="8" data-drift="-0.05">
-          <img src="/assets/cloud-4.webp" alt="" width={242} height={199} />
+          <img src="/images/decor/cloud-4.webp" alt="" width={242} height={199} />
         </div>
         <div className="prop layer cloud cloud-1" data-speed="-0.16" data-depth="12" data-drift="0.06">
-          <img src="/assets/cloud-1.webp" alt="" width={190} height={179} />
+          <img src="/images/decor/cloud-1.webp" alt="" width={190} height={179} />
         </div>
         <div className="prop layer cloud cloud-2" data-speed="-0.34" data-depth="18" data-drift="-0.08">
-          <img src="/assets/cloud-2.webp" alt="" width={276} height={146} />
+          <img src="/images/decor/cloud-2.webp" alt="" width={276} height={146} />
         </div>
       </div>
 
@@ -190,11 +160,10 @@ export function Hero({ brochure }: { brochure: Brochure }) {
                 aria-label={copy ? undefined : `${i + 1} of ${SHOOTS.length}`}
                 aria-hidden={copy || undefined}
               >
-                <img
+                <Photo
                   src={shoot.src}
                   alt={copy ? '' : shoot.alt}
-                  width={shoot.width}
-                  height={shoot.height}
+                  sizes={SHOOT_SIZES}
                   fetchPriority={pos === 0 ? 'high' : undefined}
                 />
               </li>
@@ -205,16 +174,16 @@ export function Hero({ brochure }: { brochure: Brochure }) {
         {/* The client's lettering, traced from their page: its face is not one we have,
             and a stand-in font read as a different hand. */}
         <p className="prop layer note" data-speed="-0.04" data-depth="3">
-          <img src="/assets/our-studio-shoots.svg" alt="our studio shoots" width={166} height={34} />
+          <img src="/images/decor/our-studio-shoots.svg" alt="our studio shoots" width={166} height={34} />
         </p>
         <div className="prop layer arrow" data-speed="-0.04" data-depth="3">
-          <img src="/assets/arrow.webp" alt="" width={262} height={313} />
+          <img src="/images/decor/arrow.webp" alt="" width={262} height={313} />
         </div>
 
         {/* To the gallery, by way of the curtain. A link of its own, so the hero itself
             still never re-renders. */}
         <CurtainLink className="shoots-more" href="/gallery/" label="Gallery" preload={GALLERY_PRELOAD}>
-          See more
+          See more shoots
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M3 9l6-6M4 3h5v5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>

@@ -5,3 +5,7 @@ figma/
 next-env.d.ts
 *.tsbuildinfo
 .env*.local
+
+# Made from public/images by scripts/images.mjs before every dev and build
+public/images/_sized/
+lib/photos.generated.json

@@ -22,9 +22,9 @@ function Roll({ children }: { children: string }) {
   );
 }
 
-/** The offer strip's height, read from the stylesheet so a breakpoint's value is the one used. */
+/** The offer strip's height as drawn, and 0 when the offer is switched off. */
 function stripHeight() {
-  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--offer-h')) || 0;
+  return document.querySelector<HTMLElement>('.offer')?.offsetHeight ?? 0;
 }
 
 /**

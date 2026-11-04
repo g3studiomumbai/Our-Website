@@ -1,19 +1,7 @@
 import { inr } from '@/lib/booking';
-import { DAY_OFF, DAY_RATE_WAS, RATE, SHORTEST_BOOKING } from '@/lib/site';
+import { DAY_OFF, DAY_RATE_WAS, INCLUDED, OFFER_ON, RATE, SHORTEST_BOOKING } from '@/lib/site';
 import { MoonIcon, SunIcon } from './icons';
 import { Bill } from './client/Bill';
-
-const INCLUDED = [
-  'Full lighting gear',
-  '2 backdrops',
-  'All props and furniture',
-  'AC',
-  'Makeup & changing room',
-  'Washrooms',
-  'WiFi',
-  'Power backup',
-  <>Parking for 2+&nbsp;cars</>,
-];
 
 /** Worked out from the rates, so a change of rate cannot leave a stale percentage behind. */
 const NIGHT_LESS = Math.round((1 - RATE.night / RATE.day) * 100);
@@ -33,6 +21,7 @@ export function Pricing() {
     <section
       className="band band-price"
       id="pricing"
+      data-track-view="Pricing"
       aria-labelledby="price-title"
       data-rise-group
       data-stagger="90"
@@ -54,12 +43,17 @@ export function Pricing() {
                 Day
                 <span className="rate-time">7&nbsp;AM to 9&nbsp;PM</span>
               </p>
+              {/* The row stays when the offer is off, so ₹1,000 still lines up with ₹700. */}
               <p className="rate-deal">
-                <s className="rate-was">
-                  <span className="sr-only">Was </span>
-                  {inr(DAY_RATE_WAS)}
-                </s>{' '}
-                <span className="rate-tag">{`${DAY_OFF}% off`}</span>
+                {OFFER_ON && (
+                  <>
+                    <s className="rate-was">
+                      <span className="sr-only">Was </span>
+                      {inr(DAY_RATE_WAS)}
+                    </s>{' '}
+                    <span className="rate-tag">{`${DAY_OFF}% off`}</span>
+                  </>
+                )}
               </p>
               <p className="rate-price">
                 <span className="rate-figure">{inr(RATE.day)}</span>{' '}
@@ -85,8 +79,8 @@ export function Pricing() {
           <div className="price-incl" data-rise>
             <h3 className="price-label">Included in both</h3>
             <ul className="included">
-              {INCLUDED.map((item, i) => (
-                <li key={i}>{item}</li>
+              {INCLUDED.map((item) => (
+                <li key={item}>{item}</li>
               ))}
             </ul>
           </div>
