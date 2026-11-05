@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { PHONE_E164, PHONE_HUMAN, WHATSAPP_NUMBER } from '@/lib/site';
+import { ThemeToggle } from './ThemeToggle';
 import { Mark } from '../Mark';
 import { BookingLink } from './BookingProvider';
 
@@ -137,6 +138,7 @@ export function SiteHeader() {
         <a className="phone" href={'tel:' + PHONE_E164}>
           <span className="blink">{PHONE_HUMAN}</span>
         </a>
+        <ThemeToggle />
         <button
           className="menu-btn"
           type="button"

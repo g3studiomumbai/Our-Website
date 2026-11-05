@@ -1,117 +1,77 @@
 import { photoPreload } from '@/components/Photo';
+import photos from '@/lib/photos.generated.json';
+import { SHOOTS } from './hero';
+import { SETS } from './sets';
+import { STEPS } from './steps';
 
 /**
- * The gallery page, in order: every photograph the client has given us — the five shoots
- * from the hero, the five sets, and the four from How booking works. Nothing here is a
- * stock or a stand-in.
+ * The gallery page. It is not a list of its own: it is built from every photo the site
+ * already has, so it is never out of step with them —
  *
- * Interleaved by hand so no two of a kind sit next to each other in a column. A photo can
- * come from any folder under public/images; ones only for the gallery go in
- * public/images/gallery/. See UPDATING.md.
+ *   - the hero's shoots   (content/hero.ts)
+ *   - the sets            (content/sets.ts)
+ *   - How booking works   (content/steps.ts)
+ *   - and every photo in public/images/gallery/, picked up by itself.
+ *
+ * Add a photo to any of those and it is in the gallery too, with the same description.
+ * The groups are spread through each other evenly, so no stretch of the page is all one
+ * kind. A gallery-only photo can be given a description in GALLERY_ONLY below; without
+ * one it still shows, labelled only by its kind.
  */
 export type Shot = {
   /** The path under public/images. */
   src: string;
   /** What the photo shows, for anyone who cannot see it, and for Google Images. */
   alt: string;
-  /** The caption under it, said from the picture. */
+  /** The caption under it; empty when the photo has no description yet. */
   title: string;
-  /** The small label at the caption's right. Any word will do. */
+  /** The small label at the caption's right. */
   kind: string;
 };
 
-export const SHOTS: Shot[] = [
-  {
-    src: 'hero/shoot-1.webp',
-    alt: 'A model in a blush sherwani between two embroidered ivory sherwanis on stands',
-    title: 'Sherwani lookbook',
-    kind: 'Ethnicwear',
-  },
-  {
-    src: 'sets/set-1.webp',
-    alt: 'A warm beige panelled wall caught in a shaft of light, with stone blocks and a blossom branch',
-    title: 'Beige panels in a shaft of light',
-    kind: 'Set',
-  },
-  {
-    src: 'steps/camera.webp',
-    alt: 'A camera on a gimbal facing a lit set with a peach backdrop',
-    title: 'On the gimbal',
-    kind: 'Behind the scenes',
-  },
-  {
-    src: 'hero/shoot-2.webp',
-    alt: 'A man in an orange linen shirt seated with a mug in warm light',
-    title: 'Linen in warm light',
-    kind: 'Fashion',
-  },
-  {
-    src: 'sets/set-4.webp',
-    alt: 'A white wall painted with pink arches and circles, with fluffy pink stools and a white rug',
-    title: 'Pink arches',
-    kind: 'Set',
-  },
-  {
-    src: 'hero/shoot-3.webp',
-    alt: 'A model in an embroidered linen shirt against a brown backdrop',
-    title: 'Embroidered linen',
-    kind: 'Fashion',
-  },
-  {
-    src: 'steps/set.webp',
-    alt: 'A model seated on a set already lit with softboxes',
-    title: 'Lit before you arrive',
-    kind: 'Behind the scenes',
-  },
-  {
-    src: 'sets/set-2.webp',
-    alt: 'A white panelled wall with a lace curtain, a grey chair and red flowers',
-    title: 'Lace and white panels',
-    kind: 'Set',
-  },
-  {
-    src: 'hero/shoot-4.webp',
-    alt: 'A model in a pink printed kurta and dupatta beside a softbox',
-    title: 'Printed kurta',
-    kind: 'Ethnicwear',
-  },
-  {
-    src: 'steps/shoot.webp',
-    alt: 'A model in an embroidered co-ord against a beige backdrop',
-    title: 'Embroidered co-ord',
-    kind: 'Fashion',
-  },
-  {
-    src: 'sets/set-5.webp',
-    alt: 'A white arched wall with pink flowers, a tall vase and a patterned rug',
-    title: 'The flower arch',
-    kind: 'Set',
-  },
-  {
-    src: 'hero/shoot-5.webp',
-    alt: 'Gold necklaces, bangles and earrings shot among roses and petals',
-    title: 'Gold among roses',
-    kind: 'Jewellery',
-  },
-  {
-    src: 'steps/crew.webp',
-    alt: 'A photographer shooting with a long lens beside a softbox',
-    title: 'The long lens',
-    kind: 'Behind the scenes',
-  },
-  {
-    src: 'sets/set-3.webp',
-    alt: 'An olive curtain backdrop with a wooden chair, a plant and a shaggy rug',
-    title: 'Olive curtain',
-    kind: 'Set',
-  },
+/**
+ * Descriptions for photos in public/images/gallery/, by file name — optional, but Google
+ * Images and screen readers have nothing to go on without one. For example:
+ *   'rooftop-1.webp': 'A model on a rooftop at sunset',
+ */
+const GALLERY_ONLY: Record<string, string> = {};
+
+/** Each source, with the label its photos carry. */
+const GROUPS: Shot[][] = [
+  SHOOTS.map((s) => ({ src: s.src, alt: s.alt, title: s.alt, kind: 'Shoot' })),
+  SETS.map((s) => ({ src: s.src, alt: s.alt, title: s.alt, kind: 'Set' })),
+  STEPS.map((s) => ({ src: s.src, alt: s.alt, title: s.alt, kind: 'Behind the scenes' })),
+  Object.keys(photos)
+    .filter((src) => src.startsWith('gallery/'))
+    .map((src) => {
+      const alt = GALLERY_ONLY[src.slice('gallery/'.length)] ?? '';
+      return { src, alt, title: alt, kind: 'Shoot' };
+    }),
 ];
+
+/**
+ * Spread the groups evenly: each photo is placed at its own fraction of the way through
+ * its group, and the page is those fractions in order. Three sets among thirty shoots come
+ * a third, two thirds and the end of the way down, not all at the bottom. A photo listed
+ * in two places shows once. One without a description has no caption, only its kind.
+ */
+function spread(groups: Shot[][]): Shot[] {
+  const seen = new Set<string>();
+  return groups
+    .flatMap((group, g) => group.map((shot, i) => ({ shot, at: (i + 0.5) / group.length, g })))
+    .sort((a, b) => a.at - b.at || a.g - b.g)
+    .map(({ shot }) => shot)
+    .filter(({ src }) => !seen.has(src) && Boolean(seen.add(src)));
+}
+
+export const SHOTS: Shot[] = spread(GROUPS);
 
 /** How wide a photo is drawn in the gallery's columns: three across, two on a tablet or phone. */
 export const SHOT_SIZES = '(max-width: 1023px) 50vw, 33vw';
 
 /**
  * What the curtain waits for on its way to the gallery, so it lifts on pictures, not gaps:
- * the same copies the page's own <img> tags will pick.
+ * the first screenful (three rows of three), as the copies the page's own <img> will pick.
+ * The rest load as the reader scrolls to them.
  */
-export const GALLERY_PRELOAD = SHOTS.map((shot) => photoPreload(shot.src, SHOT_SIZES));
+export const GALLERY_PRELOAD = SHOTS.slice(0, 9).map((shot) => photoPreload(shot.src, SHOT_SIZES));

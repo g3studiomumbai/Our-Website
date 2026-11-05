@@ -8,14 +8,17 @@ import { BookingLink } from './BookingProvider';
 import { CurtainLink } from './Curtain';
 import { createMotionStore } from './motion';
 import { useParallax } from './use-parallax';
-import { useCarousel } from './use-carousel';
+import { placeOf, useCarousel } from './use-carousel';
 
 /**
- * Where each card starts. The five shoots are on stage, the middle one large; their repeats
- * wait off it, so a card always slides in from the right as one leaves on the left, and
- * the five on show are always five different shoots. See use-carousel.ts.
+ * How many cards: one for each shoot once there are ten or more. With fewer, the shoots
+ * repeat until there are, so a card always slides in from the right as one leaves on the
+ * left and the five on show are always five different shoots. See use-carousel.ts.
  */
-const START = [-2, -1, 0, 1, 2, 3, 4, -5, -4, -3];
+const CARDS = SHOOTS.length >= 10 ? SHOOTS.length : SHOOTS.length * Math.ceil(10 / SHOOTS.length);
+
+/** Where card i starts: the third shoot in the middle, the rest lined up either side. */
+const START = Array.from({ length: CARDS }, (_, i) => placeOf(i - 2, CARDS));
 
 /**
  * The hero: the headline, the two buttons, and the shoots.
@@ -165,6 +168,9 @@ export function Hero({ brochure }: { brochure: Brochure }) {
                   alt={copy ? '' : shoot.alt}
                   sizes={SHOOT_SIZES}
                   fetchPriority={pos === 0 ? 'high' : undefined}
+                  // Only the cards on stage and next in line load straight away; the rest
+                  // wait until they come near, so 35 shoots cost the first screen nothing.
+                  loading={Math.abs(pos) > 3 ? 'lazy' : undefined}
                 />
               </li>
             );

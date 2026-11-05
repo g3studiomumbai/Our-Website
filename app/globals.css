@@ -91,7 +91,7 @@
     z-index: 100;
     display: grid;
     place-content: center;
-    background: var(--ink);
+    background: var(--shade);
   }
   html:not(.js) .loader, html.no-loader .loader, .loader.is-gone { display: none }
   body.is-loading { overflow: hidden }
@@ -147,8 +147,8 @@
        across it, which is what reads as filling rather than sliding. */
     width: 0;
     overflow: hidden;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--on-shade);
+    color: var(--shade);
     animation: chip-fill var(--fill-run) var(--ease-roll) var(--fill-at) forwards;
   }
   .chip-fill > span { display: block; padding: 11px 16px 9px; white-space: nowrap }
@@ -170,8 +170,8 @@
     z-index: 110;
     display: grid;
     place-content: center;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--shade);
+    color: var(--on-shade);
     translate: 0 calc(100% + var(--arc));
     visibility: hidden;
   }
@@ -248,7 +248,7 @@
      positioning — .brand is in flow and .nav-links is absolute, and a surface at z-index 0
      would land between them. */
   .nav {
-    --float-w: 420px;   /* the floating bar's width: the mark, the menu and the booking button */
+    --float-w: 472px;   /* the floating bar's width: the mark, the theme and menu buttons, booking */
     --float-gap: 8px;   /* the space left above and below it */
     --float-pad: 12px;  /* the room inside it, either side of the mark and the button */
     --float-x: max(var(--float-gap), calc(50% - var(--float-w) / 2));
@@ -279,7 +279,7 @@
     background: var(--glass);
     -webkit-backdrop-filter: blur(16px) saturate(1.6);
     backdrop-filter: blur(16px) saturate(1.6);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent), 0 14px 30px -16px color-mix(in srgb, var(--ink) 34%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--shade) 7%, transparent), 0 14px 30px -16px color-mix(in srgb, var(--shade) 34%, transparent);
   }
   /* Open, the surface reaches down past the bar by the menu's height (measured in
      SiteHeader) and turns solid. Even at 97% the headline behind showed through the list as
@@ -287,7 +287,7 @@
   .nav.is-open::before {
     bottom: calc(var(--sy) - var(--panel-h, 0px));
     background: var(--paper);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 7%, transparent), 0 28px 56px -28px color-mix(in srgb, var(--ink) 45%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--shade) 7%, transparent), 0 28px 56px -28px color-mix(in srgb, var(--shade) 45%, transparent);
   }
 
   /* Only once the bar is live, so a reload partway down the page arrives already floating
@@ -392,6 +392,37 @@
                 max-width 0s linear 150ms, margin 0s linear 150ms;
   }
   .nav.is-float .phone { max-width: 0; margin-inline: 0 }
+
+  /* ---------- the theme button ----------
+     Light or dark, beside the menu button and drawn like it; it stays in the floating bar.
+     The icon is the theme it leads to: a moon on the light theme, a sun on the dark. */
+  .theme-btn {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    margin-right: 8px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 200ms ease;
+  }
+  .theme-btn:hover { border-color: var(--ink) }
+  .theme-btn svg { grid-area: 1 / 1; width: 18px; height: 18px }
+  .theme-sun, [data-theme='dark'] .theme-moon { display: none }
+  [data-theme='dark'] .theme-sun { display: block }
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-btn:hover svg { rotate: 20deg; transition: rotate 300ms var(--ease-roll) }
+  }
+  /* For the moment of a swap only: every colour eases over at once. */
+  .theme-fade, .theme-fade *, .theme-fade *::before, .theme-fade *::after {
+    transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease,
+                fill 320ms ease !important;
+  }
 
   /* ---------- the menu button ---------- */
   .menu-btn {
@@ -587,7 +618,7 @@
     overflow: visible;
     background: transparent;
   }
-  .offer-pop::backdrop { background: color-mix(in srgb, var(--ink) 62%, transparent); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px) }
+  .offer-pop::backdrop { background: color-mix(in srgb, var(--shade) 62%, transparent); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px) }
   .offer-card {
     position: relative;
     display: grid;
@@ -595,7 +626,7 @@
     overflow: hidden;
     border-radius: 16px;
     background: var(--paper);
-    box-shadow: 0 40px 80px -40px color-mix(in srgb, var(--ink) 60%, transparent);
+    box-shadow: 0 40px 80px -40px color-mix(in srgb, var(--shade) 60%, transparent);
   }
   .offer-art { position: relative; min-height: 100%; background: var(--accent-soft) }
   .offer-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20% }
@@ -815,6 +846,10 @@
   .note    { --x: 916;   --y: 12;   --w: 166; z-index: 2; margin: 0 }
   .arrow   { --x: 920;   --y: 51;   --w: 76; --turn: 181deg; z-index: 2 }
   .arrow img { transform: rotate(var(--turn)) }
+  /* The hand-written note and its arrow are drawn in black; on a dark theme they are
+     flipped to light (theme.css → --decor-ink), and the pale clouds are dimmed. */
+  :is(.note, .arrow) img { filter: var(--decor-ink, none) }
+  .cloud { opacity: var(--cloud-opacity, 1) }
 
   /* ---------- the shoots carousel ----------
      Right to left, the middle shoot large and the others stepping down from it, each photo in
@@ -854,7 +889,10 @@
   .shoot[data-pos="-4"] { --x: -1152 }
   .shoot[data-pos="5"]  { --x: 1414 }
   .shoot[data-pos="-5"] { --x: -1414 }
+  /* The two waiting rooms: with more than a dozen shoots, the rest are stacked here. */
+  .shoot[data-pos="6"]  { --x: 1676 }
   .shoot[data-pos="-6"] { --x: -1676 }
+  .shoot:is([data-pos="6"], [data-pos="-6"]) { visibility: hidden }
   /* A wrapping card jumps from one end to the other; it must never be seen crossing. */
   .shoot.is-snapping { transition: none !important }
   .shoot img {
@@ -1053,7 +1091,7 @@
     border-radius: 4px;
     background: var(--paper);
     color: var(--ink);
-    box-shadow: 0 4px 14px color-mix(in srgb, var(--ink) 18%, transparent);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--shade) 18%, transparent);
     opacity: 0;
     transition: opacity 200ms ease;
   }
@@ -1081,12 +1119,12 @@
     padding: 64px 104px 80px;
     border: 0;
     background: transparent;
-    color: var(--paper);
+    color: var(--on-shade);
     overflow: hidden;
     touch-action: pan-y pinch-zoom;
   }
   .viewer[open] { display: grid; place-items: center }
-  .viewer::backdrop { background: color-mix(in srgb, var(--ink) 96%, transparent) }
+  .viewer::backdrop { background: color-mix(in srgb, var(--shade) 96%, transparent) }
   .viewer-img {
     width: auto;
     height: auto;
@@ -1106,13 +1144,13 @@
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--paper) 12%, transparent);
-    color: var(--paper);
+    background: color-mix(in srgb, var(--on-shade) 12%, transparent);
+    color: var(--on-shade);
     cursor: pointer;
     transition: background-color 160ms ease;
   }
-  .viewer-btn:hover { background: color-mix(in srgb, var(--paper) 24%, transparent) }
-  .viewer-btn:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px }
+  .viewer-btn:hover { background: color-mix(in srgb, var(--on-shade) 24%, transparent) }
+  .viewer-btn:focus-visible { outline: 2px solid var(--on-shade); outline-offset: 2px }
   .viewer-btn svg { width: 18px; height: 18px }
   .viewer-close { top: 16px; right: 16px }
   .viewer-prev, .viewer-next { top: 50%; translate: 0 -50% }
@@ -1125,7 +1163,7 @@
     bottom: 28px;
     text-align: center;
     font: 500 14px/20px var(--body);
-    color: color-mix(in srgb, var(--paper) 72%, transparent);
+    color: color-mix(in srgb, var(--on-shade) 72%, transparent);
     font-variant-numeric: tabular-nums;
   }
   html:has(.viewer[open]) { overflow: hidden }
@@ -1243,7 +1281,7 @@
     transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
   }
   .bill-slot svg { width: 16px; height: 16px }
-  .bill-slot input:checked + span { background: var(--paper); color: var(--accent); box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 18%, transparent) }
+  .bill-slot input:checked + span { background: var(--paper); color: var(--accent); box-shadow: 0 1px 3px color-mix(in srgb, var(--shade) 18%, transparent) }
   .bill-slot input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px }
   .bill-hours { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px }
   .bill-hours-label { font: 500 15px/22px var(--body); color: var(--ink-2) }
@@ -1724,7 +1762,8 @@
   .g-frame img { display: block; width: 100%; height: auto; transition: scale 1200ms var(--ease-arrive) }
   .g-cap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 12px; padding-top: 14px }
   .g-no { font: italic 800 11px/1 var(--mark); letter-spacing: 0.06em; color: var(--accent) }
-  .g-name { font: 600 15px/20px var(--body); color: var(--ink) }
+  /* One line: a long description ends in an ellipsis rather than pushing the next row down. */
+  .g-name { overflow: hidden; font: 600 15px/20px var(--body); color: var(--ink); white-space: nowrap; text-overflow: ellipsis }
   .g-kind { font: 400 13px/20px var(--body); color: var(--ink-3); white-space: nowrap }
   @media (hover: hover) {
     .g-open:hover .g-frame img { scale: 1.06 }
@@ -1800,31 +1839,31 @@
     padding: 0;
     border: 0;
     overflow: hidden;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--shade);
+    color: var(--on-shade);
   }
   .g-view[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto }
-  .g-view::backdrop { background: var(--ink) }
+  .g-view::backdrop { background: var(--shade) }
   html:has(.g-view[open]) { overflow: hidden }
   .g-view-top { display: flex; align-items: center; justify-content: space-between; padding: 20px var(--gutter) }
   .g-view-count { margin: 0; font: italic 800 14px/1 var(--mark); letter-spacing: 0.08em; color: var(--dark-muted) }
-  .g-view-count span { color: var(--paper) }
+  .g-view-count span { color: var(--on-shade) }
   .g-view-close {
     display: flex;
     align-items: center;
     gap: 10px;
     height: 40px;
     padding: 0 14px;
-    border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
+    border: 1px solid color-mix(in srgb, var(--on-shade) 24%, transparent);
     border-radius: 4px;
     background: none;
-    color: var(--paper);
+    color: var(--on-shade);
     font: 500 14px/1 var(--body);
     cursor: pointer;
     transition: border-color 160ms ease;
   }
   .g-view-close svg { width: 14px; height: 14px }
-  .g-view-close:hover { border-color: var(--paper) }
+  .g-view-close:hover { border-color: var(--on-shade) }
   .g-view-fig {
     display: flex;
     flex-direction: column;
@@ -1856,18 +1895,18 @@
     height: 56px;
     margin-top: -28px;
     padding: 0;
-    border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
+    border: 1px solid color-mix(in srgb, var(--on-shade) 24%, transparent);
     border-radius: 50%;
     background: none;
-    color: var(--paper);
+    color: var(--on-shade);
     cursor: pointer;
     transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
   }
   .g-view-prev { left: var(--gutter) }
   .g-view-next { right: var(--gutter) }
   :is(.g-view-prev, .g-view-next) svg { width: 22px; height: 22px }
-  :is(.g-view-prev, .g-view-next):hover { border-color: var(--paper); background: var(--paper); color: var(--ink) }
-  .g-rail { display: flex; gap: 6px; margin: 0; padding: 18px var(--gutter) 24px; overflow-x: auto; list-style: none; scrollbar-width: none }
+  :is(.g-view-prev, .g-view-next):hover { border-color: var(--on-shade); background: var(--on-shade); color: var(--shade) }
+  .g-rail { position: relative; display: flex; gap: 6px; margin: 0; padding: 18px var(--gutter) 24px; overflow-x: auto; list-style: none; scrollbar-width: none }
   /* Centred while it fits, and scrollable from its first picture once it does not. */
   .g-rail li:first-child { margin-left: auto }
   .g-rail li:last-child { margin-right: auto }
@@ -1887,7 +1926,7 @@
   .g-rail button:hover { opacity: 0.8 }
   .g-rail button[aria-current] { opacity: 1; translate: 0 -4px; box-shadow: 0 0 0 2px var(--accent) }
   .g-rail img { display: block; width: 100%; height: 100%; object-fit: cover }
-  .g-view :focus-visible { outline: 2px solid var(--paper); outline-offset: 2px }
+  .g-view :focus-visible { outline: 2px solid var(--on-shade); outline-offset: 2px }
   @keyframes g-in { from { opacity: 0; scale: 1.04; clip-path: inset(8% 8% 8% 8% round 4px) } to { clip-path: inset(0 round 4px) } }
   @keyframes g-cap-in { from { opacity: 0; translate: 0 8px } }
   @media (prefers-reduced-motion: no-preference) {

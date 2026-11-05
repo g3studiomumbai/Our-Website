@@ -6,13 +6,17 @@
  *
  *   npm run images       (runs on its own before `npm run dev` and `npm run build`,
  *                         Vercel's build included, so nobody has to remember it)
+ *   node scripts/images.mjs --watch
+ *                        (what `npm run dev` keeps running alongside: does it again whenever
+ *                         a photo is added, replaced or removed, so the page picks it up live)
  *
  * The copies go in public/images/_sized, which is not committed: they are rebuilt from the
  * originals whenever an original is newer than its copies. So adding a photo is: drop the
  * file in the right folder, mention it in content/, push.
  */
 import sharp from 'sharp';
-import { mkdir, readdir, stat, writeFile } from 'node:fs/promises';
+import { watch } from 'node:fs';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -41,25 +45,64 @@ async function newer(source, target) {
   }
 }
 
-const out = {};
-let made = 0;
-for await (const file of walk(images)) {
-  const ext = path.extname(file).toLowerCase();
-  if (!RASTER.has(ext)) continue;
-  const rel = path.relative(images, file).split(path.sep).join('/');
-  const { width, height } = await sharp(file).metadata();
-  if (!width || !height) throw new Error('Cannot read the size of public/images/' + rel);
-  const widths = WIDTHS.filter((w) => w < width * 0.9);
-  for (const w of widths) {
-    const target = path.join(sized, rel.replace(/\.[^.]+$/, '') + '-' + w + '.webp');
-    if (!(await newer(file, target))) continue;
-    await mkdir(path.dirname(target), { recursive: true });
-    await sharp(file).resize({ width: w }).webp({ quality: 76 }).toFile(target);
-    made += 1;
+async function run() {
+  const out = {};
+  let made = 0;
+  for await (const file of walk(images)) {
+    const ext = path.extname(file).toLowerCase();
+    if (!RASTER.has(ext)) continue;
+    const rel = path.relative(images, file).split(path.sep).join('/');
+    const { width, height } = await sharp(file).metadata();
+    if (!width || !height) throw new Error('Cannot read the size of public/images/' + rel);
+    const widths = WIDTHS.filter((w) => w < width * 0.9);
+    for (const w of widths) {
+      const target = path.join(sized, rel.replace(/\.[^.]+$/, '') + '-' + w + '.webp');
+      if (!(await newer(file, target))) continue;
+      await mkdir(path.dirname(target), { recursive: true });
+      await sharp(file).resize({ width: w }).webp({ quality: 76 }).toFile(target);
+      made += 1;
+    }
+    out[rel] = { width, height, widths };
   }
-  out[rel] = { width, height, widths };
+
+  const sorted = Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
+  const json = JSON.stringify(sorted, null, 2) + '\n';
+  // Written only when it changed: the dev server reloads the page on every write.
+  const before = await readFile(manifest, 'utf8').catch(() => '');
+  if (json !== before) await writeFile(manifest, json);
+  console.log(`images: ${Object.keys(sorted).length} photos, ${made} copies made`);
 }
 
-const sorted = Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
-await writeFile(manifest, JSON.stringify(sorted, null, 2) + '\n');
-console.log(`images: ${Object.keys(sorted).length} photos, ${made} copies made`);
+await run();
+
+if (process.argv.includes('--watch')) {
+  // A folder of photos dropped in at once fires many events: wait for them to settle, and
+  // never run twice at the same time.
+  let timer;
+  let running = false;
+  let again = false;
+  const go = async () => {
+    if (running) {
+      again = true;
+      return;
+    }
+    running = true;
+    try {
+      await run();
+    } catch (error) {
+      // A half-copied file can't be read yet; the next event (or save) tries again.
+      console.error('images:', error.message);
+    }
+    running = false;
+    if (again) {
+      again = false;
+      go();
+    }
+  };
+  watch(images, { recursive: true }, (_event, name) => {
+    if (!name || name.startsWith('_sized')) return;
+    clearTimeout(timer);
+    timer = setTimeout(go, 400);
+  });
+  console.log('images: watching public/images for new photos');
+}

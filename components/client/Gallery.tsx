@@ -240,7 +240,7 @@ export function Gallery() {
               <button
                 className="g-open"
                 type="button"
-                aria-label={`Open ${shot.title}, ${i + 1} of ${SHOTS.length}`}
+                aria-label={`Open ${shot.title || shot.kind}, ${i + 1} of ${SHOTS.length}`}
                 onClick={() => setAt(i)}
               >
                 <span className="g-frame">
@@ -322,6 +322,19 @@ function Viewer({ at, onMove }: { at: number | null; onMove: (at: number | null)
     return () => box.removeEventListener('close', onClose);
   }, [onMove]);
 
+  // With dozens of photos the rail is wider than the screen: keep the current one in view,
+  // centred, as the reader moves through them. Scrolled by hand rather than scrollIntoView,
+  // which would also scroll the page behind the dialog.
+  const rail = useRef<HTMLOListElement>(null);
+  useEffect(() => {
+    const list = rail.current;
+    const current = list?.querySelector<HTMLElement>('[aria-current]');
+    if (!list || !current) return;
+    const left = current.offsetLeft + current.offsetWidth / 2 - list.clientWidth / 2;
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    list.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' });
+  }, [at]);
+
   const move = (by: number) => onMove(((at ?? 0) + by + SHOTS.length) % SHOTS.length);
 
   function onKeyDown(e: KeyboardEvent) {
@@ -383,12 +396,12 @@ function Viewer({ at, onMove }: { at: number | null; onMove: (at: number | null)
             </svg>
           </button>
 
-          <ol className="g-rail" aria-label="All photos">
+          <ol className="g-rail" aria-label="All photos" ref={rail}>
             {SHOTS.map((item, i) => (
               <li key={item.src}>
                 <button
                   type="button"
-                  aria-label={`${item.title}, ${i + 1} of ${SHOTS.length}`}
+                  aria-label={`${item.title || item.kind}, ${i + 1} of ${SHOTS.length}`}
                   aria-current={i === at || undefined}
                   onClick={() => onMove(i)}
                 >
@@ -398,7 +411,7 @@ function Viewer({ at, onMove }: { at: number | null; onMove: (at: number | null)
             ))}
           </ol>
           <p className="sr-only" aria-live="polite">
-            {`${(at ?? 0) + 1} of ${SHOTS.length}: ${shot.title}. ${shot.alt}`}
+            {`${(at ?? 0) + 1} of ${SHOTS.length}: ${shot.title || shot.kind}.`}
           </p>
         </>
       )}

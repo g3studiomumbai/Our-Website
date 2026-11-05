@@ -33,7 +33,72 @@ export const SETS: StudioSet[] = [
     src: 'sets/set-5.webp',
     alt: 'A white arched wall with pink flowers, a tall vase and a patterned rug',
   },
+  {
+    src: 'sets/set-6.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-7.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-8.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-9.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-10.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-11.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-12.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-13.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-14.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-15.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-16.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-17.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-18.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-19.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-20.webp',
+    alt: '',
+  },
+  {
+    src: 'sets/set-21.webp',
+    alt: '',
+  },
 ];
+
 
 /** How wide a set is drawn in the strip, for the browser's choice of copy. */
 export const SET_SIZES = '(max-width: 640px) 200px, 19vw';

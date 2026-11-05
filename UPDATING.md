@@ -20,10 +20,10 @@ about a minute. To look first, run `npm run dev` and open http://localhost:3000.
 | The offer (₹3,500 → 70% off) | `content/studio.ts` → `DAY_RATE_WAS`, `DAY_OFF` |
 | Offer on / off | `content/studio.ts` → `OFFER_ON = false` hides the top strip, the popup (which opens once a visit, as the visitor scrolls past the hero) and the struck-out price |
 | Page title, Google description | `content/studio.ts` → `TITLE`, `DESCRIPTION` |
-| Hero photos (exactly 5) | `content/hero.ts` + `public/images/hero/` |
+| Hero photos (any number; the third starts in the middle) | `content/hero.ts` + `public/images/hero/` |
 | How booking works (4 steps) | `content/steps.ts` + `public/images/steps/` |
 | Sets strip | `content/sets.ts` + `public/images/sets/` |
-| Gallery page | `content/gallery.ts` (+ `public/images/gallery/` for gallery-only photos) |
+| Gallery page | Nothing: it shows every hero, set and booking-step photo by itself. For gallery-only photos, drop them in `public/images/gallery/` (and give each a description in `content/gallery.ts` → `GALLERY_ONLY`) |
 | Questions (FAQ) | `content/faq.ts` (also feeds Google's FAQ data) |
 | Share picture (WhatsApp/Facebook preview) | replace `public/images/share.jpg`, 1200 × 630 |
 | Brochure | save the PDF as `public/g3-studio-brochure.pdf` |
@@ -32,10 +32,15 @@ about a minute. To look first, run `npm run dev` and open http://localhost:3000.
 ## Changing the colours
 
 Every colour on the site is in **`content/theme.css`** — about ten values with plain
-names. Hover shades, shadows, the dark loading screen, the photo viewer and the frosted
-bars are mixed from them, so they follow on their own.
+names. Hover shades and the frosted bar are mixed from them, so they follow on their own.
 
-Most of the look is the three **brand** colours:
+The site has **two themes**, each a block in that file: **LIGHT** (black on white) and
+**DARK** (white on black). Visitors switch with the sun/moon button in the bar, and the
+site remembers their choice. A first-time visitor gets dark; to make it light, change
+`DEFAULT_THEME` near the top of `app/layout.tsx` to `'light'`. The loader, the loading
+curtain and the photo viewers are dark in both themes.
+
+Most of the look is the three **brand** colours (light theme values shown):
 
 | Name | Default | Where it shows |
 |---|---|---|
@@ -58,8 +63,12 @@ default or darker; `--accent-soft` sits behind dark text, so keep it very pale. 
 pair is one colour at full strength for `--accent`, and the same colour mixed about 90%
 with white for `--accent-soft` (75% for `--accent-mid`).
 
-The photos, clouds and the hand-written "our studio shoots" are pictures, so they keep
-their own colours.
+Those rules are for the light theme; in the dark one they flip — `--accent` is light and
+carries dark text, `--accent-soft` is a very dark grey.
+
+The photos and clouds are pictures, so they keep their own colours (the clouds are dimmed
+on dark). The hand-written "our studio shoots" and its arrow are drawn in black and are
+flipped to white on the dark theme.
 
 ## Adding or swapping a photo
 
@@ -69,9 +78,10 @@ their own colours.
    plain sentence saying what is in the picture. That is what Google Images and
    screen readers read.
 3. Push. Smaller copies for phones are made automatically on every build
-   (`scripts/images.mjs`); you never make them by hand.
+   (`scripts/images.mjs`); you never make them by hand. While `npm run dev` is running,
+   a photo you drop in is picked up within a few seconds, without restarting it.
 
-Shapes that fit: hero and sets are portrait **2:3**, steps portrait **3:4**, the
+Shapes that fit: hero and sets are portrait **2:3** to **3:4**, with no white frame round the picture (it shows as a border inside the card), steps portrait **3:4**, the
 gallery takes any shape. A path that doesn't exist stops the build with a message
 naming it, so a typo can't go live as a broken image.
 

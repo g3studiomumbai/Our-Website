@@ -7,6 +7,20 @@ const HOLD = 2800;
 const MOVE = 900;
 
 /**
+ * The furthest place the CSS has: just off the stage on either side. Cards further round
+ * than that all wait there, stacked out of sight, so any number of shoots works.
+ */
+const FAR = 6;
+
+/** The place of a card `d` steps from the middle one, in a ring of `n`: wrapped, then held at FAR. */
+export function placeOf(d: number, n: number) {
+  const reach = Math.floor((n - 1) / 2);
+  let at = ((d % n) + n) % n;
+  if (at > reach) at -= n;
+  return Math.max(-FAR, Math.min(FAR, at));
+}
+
+/**
  * The shoots carousel: right to left, the centre card large, wrapping round.
  *
  * Position is a `data-pos` attribute the CSS sizes and places each card from, and this
@@ -32,17 +46,13 @@ export function useCarousel(
     if (!cards.length) return;
 
     const N = cards.length;
-    const reach = Math.floor((N - 1) / 2);
     let active = cards.findIndex((c) => c.dataset.pos === '0');
     let timer = 0;
     let busy = false;
     let hovering = false;
     let focused = false;
 
-    function offset(i: number) {
-      const d = (((i - active) % N) + N) % N;
-      return d > reach ? d - N : d;
-    }
+    const offset = (i: number) => placeOf(i - active, N);
 
     function step(dir: number) {
       if (busy) return;
@@ -52,8 +62,12 @@ export function useCarousel(
         const was = Number(card.dataset.pos);
         const next = offset(i);
         if (Math.abs(next - was) > 1) {
+          // Crossing to the other end. Off stage on both sides it simply moves, unseen;
+          // otherwise it jumps to just beyond where it is going, and slides in from there.
           card.classList.add('is-snapping');
-          card.dataset.pos = String(next > was ? next + 1 : next - 1);
+          card.dataset.pos = String(
+            Math.abs(next) >= FAR ? next : next > was ? next + 1 : next - 1,
+          );
           void card.offsetWidth;
           card.classList.remove('is-snapping');
         }

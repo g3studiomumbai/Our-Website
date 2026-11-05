@@ -62,7 +62,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#ffffff',
+  // The dark theme's page colour; ThemeToggle updates it to the theme actually showing.
+  themeColor: '#0E0E0E',
 };
 
 /**
@@ -76,8 +77,23 @@ export const viewport: Viewport = {
  * pushing the next showing further off. Reduced motion is checked first and on its own,
  * so a reader who asked for less motion never sees it even when storage is blocked.
  */
+/**
+ * The theme a first-time visitor sees: 'dark' or 'light'. After that the button in the bar
+ * decides, and the choice is remembered. The colours themselves are in content/theme.css.
+ */
+const DEFAULT_THEME = 'dark';
+
 const BEFORE_PAINT = `
 document.documentElement.classList.add('js');
+// The theme first of all, so the page never shows in the wrong one even for a frame.
+(function () {
+  var theme = '${DEFAULT_THEME}';
+  try {
+    var saved = localStorage.getItem('g3-theme');
+    if (saved === 'light' || saved === 'dark') theme = saved;
+  } catch (e) { /* storage blocked: the default */ }
+  document.documentElement.dataset.theme = theme;
+})();
 (function () {
   var root = document.documentElement;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -105,7 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // their classes before React hydrates (js, no-loader, is-loading, is-done), on purpose.
   // None of the three ever re-renders on the client, so nothing will put them back.
   return (
-    <html lang="en-IN" suppressHydrationWarning>
+    <html lang="en-IN" data-theme={DEFAULT_THEME} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: BEFORE_PAINT }} />
         {/* The headline's face, which the bar shares, and the body's. The shoot in the middle, the largest thing

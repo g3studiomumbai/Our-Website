@@ -1,49 +1,91 @@
 /*
  * THE SITE'S COLOURS — change the theme here, and only here.
  *
- * Every colour on the site comes from these few values. Hover shades, shadows, the dark
- * loading screen, the photo viewer and the frosted bars are all mixed from them, so they
- * follow along on their own. Edit a value, save, and the whole site changes.
+ * The site has two themes, LIGHT and DARK, and a button in the bar that switches between
+ * them (the visitor's choice is remembered). Dark is what a first-time visitor sees; to
+ * change that, see DEFAULT_THEME in app/layout.tsx.
+ *
+ * Every colour on the site comes from these few values. Hover shades, the frosted bar and
+ * the cards are mixed from them, so they follow along on their own. Edit a value, save,
+ * and the whole site changes.
  *
  * Use hex colours (#RRGGBB). A colour picker that gives hex works: Google "color picker",
  * or coolors.co. See UPDATING.md → "Changing the colours".
  */
+
+/* ======================= LIGHT — black text on white ======================= */
 :root {
   /* ---- Brand ---------------------------------------------------------------------
      The accent is the one strong colour: the offer strip at the top, the night-rate card,
-     "70% OFF", the ticks, the active choice in the bill, prices and links. White text sits
-     on it, so keep it dark enough to read white on (anything as deep as the default is). */
+     "70% OFF", the ticks, the active choice in the bill, prices and links. --paper text
+     sits on it, so the two must contrast strongly. */
   --accent: #111111;
-  /* A very pale tint of the accent: the pricing section, the frames round the photos,
-     the bill's Day/Night switch and the "Still have a question?" card. */
+  /* A very faint tint: the pricing section, the frames round the photos, the bill's
+     Day/Night switch and the "Still have a question?" card. */
   --accent-soft: #F2F2F2;
   /* A stronger tint: the background of "How booking works". */
   --accent-mid: #E4E4E4;
 
   /* ---- Text --------------------------------------------------------------------------
-     --ink is the darkest colour: headings, the black buttons, the logo, and the dark
-     loading screen and photo viewer. The others step down from it. */
+     --ink is the strongest text colour: headings, the solid buttons, the logo. The others
+     step down from it. */
   --ink: #141414;
   --ink-2: #3F3F3F;   /* links in the bar, list items */
   --copy: #555555;    /* paragraphs and small print */
   --ink-3: #6E6E6E;   /* the quietest text: labels, numbers */
 
   /* ---- Surfaces ------------------------------------------------------------------- */
-  --paper: #FFFFFF;   /* the page, the cards, text on dark or accent backgrounds */
+  --paper: #FFFFFF;   /* the page, the cards, text on accent backgrounds */
   --wash: #FAFAFA;    /* the questions section, a shade off the page */
   --chip: #EFEFEF;    /* small grey chips and tags */
   --line: #DCDCDC;    /* hairlines, borders, and the grey behind a photo while it loads */
 
-  /* ---- Mixed from the above (no need to touch) --------------------------------------- */
+  /* ---- Pictures in the hero ----------------------------------------------------------- */
+  --decor-ink: none;     /* the hand-written note and arrow, drawn in black */
+  --cloud-opacity: 1;
+
+  color-scheme: light;
+}
+
+/* ======================= DARK — light text on black ======================= */
+:root[data-theme='dark'] {
+  --accent: #F2F2F2;
+  --accent-soft: #1A1A1A;
+  --accent-mid: #242424;
+
+  --ink: #F2F2F2;
+  --ink-2: #CFCFCF;
+  --copy: #ABABAB;
+  --ink-3: #8A8A8A;
+
+  --paper: #0E0E0E;
+  --wash: #131313;
+  --chip: #232323;
+  --line: #2E2E2E;
+
+  --decor-ink: invert(1); /* turns the black note and arrow white */
+  --cloud-opacity: 0.22;  /* pale clouds would glare on black */
+
+  color-scheme: dark;
+}
+
+/* ---- The same in both themes (no need to touch) ---------------------------------------
+   Some things stay dark whatever the theme: the opening loader, the loading curtain, the
+   photo viewers, shadows and the dimmed backdrop behind the offer. */
+:root {
+  --shade: #111111;
+  --on-shade: #FFFFFF;
+  --dark-raised: color-mix(in srgb, var(--shade) 88%, var(--on-shade));
+  --dark-muted: color-mix(in srgb, var(--shade) 45%, var(--on-shade));
+
   --ink-hover: color-mix(in srgb, var(--ink) 92%, var(--paper));
   --accent-soft-hover: color-mix(in srgb, var(--accent-soft) 93%, var(--accent));
-  --dark-raised: color-mix(in srgb, var(--ink) 92%, var(--paper));
-  --dark-muted: color-mix(in srgb, var(--ink) 50%, var(--paper));
   --glass: color-mix(in srgb, var(--paper) 82%, transparent);
 }
 
 /*
- * READY-MADE THEMES — to try one, copy its lines over the matching ones above.
+ * READY-MADE COLOURS — to try one, copy its lines over the matching ones in LIGHT.
+ * (They are light themes: pale tints, with white text on the accent.)
  *
  * Indigo (the original):  --accent: #4E4EFF;  --accent-soft: #E7E7FA;  --accent-mid: #C4C4FB;
  *   and for its warm greys: --ink: #141413; --ink-2: #44423D; --copy: #55534D; --ink-3: #6E6C66;
