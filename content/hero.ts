@@ -50,7 +50,7 @@ export const SHOOTS = [
 export const SHOOT_SIZES = '(max-width: 640px) 220px, 25vw';
 
 /** The middle shoot: preloaded in the page head, and in the popup. */
-export const LEAD_SHOOT = SHOOTS[2].src;
+export const LEAD_SHOOT = SHOOTS[14].src;
 
 /** What the curtain waits for on its way back to the home page: the three middle shoots. */
 export const HOME_PRELOAD = SHOOTS.slice(1, 4).map((shoot) => photoPreload(shoot.src, SHOOT_SIZES));

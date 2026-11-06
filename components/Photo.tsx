@@ -18,14 +18,14 @@ export function photo(src: string): Known {
 /** The address of the photo as it was put in the folder. */
 export const photoUrl = (src: string) => '/images/' + src;
 
-/** Every copy of the photo with its width, for srcset, the original last. */
+/**
+ * Every copy of the photo with its width, for srcset, the full-width one last. Copies are
+ * named after the whole file name, as scripts/images.mjs makes them.
+ */
 export function photoSrcSet(src: string): string {
-  const { width, widths } = photo(src);
-  const base = src.replace(/\.[^.]+$/, '');
-  return [
-    ...widths.map((w) => `/images/_sized/${base}-${w}.webp ${w}w`),
-    `${photoUrl(src)} ${width}w`,
-  ].join(', ');
+  return photo(src)
+    .widths.map((w) => `/images/_sized/${src}.${w}.webp ${w}w`)
+    .join(', ');
 }
 
 /** What the curtain loads ahead of a page: the same choice the page's <img> will make. */

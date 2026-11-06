@@ -11,6 +11,21 @@ const nextConfig = {
     // time by scripts/images.mjs. See components/Photo.tsx.
     unoptimized: true,
   },
+  // How long a visitor's browser keeps files before asking again. Photos: a day, and after
+  // that the stored copy still shows while a fresh one is fetched behind it, so a photo
+  // replaced under the same name reaches returning visitors within a day. Fonts never change.
+  async headers() {
+    return [
+      {
+        source: '/images/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

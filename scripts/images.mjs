@@ -26,6 +26,13 @@ const manifest = path.join(root, 'lib', 'photos.generated.json');
 
 /** The widths a photo is copied at, where it is wider than that to begin with. */
 const WIDTHS = [400, 800, 1200];
+const QUALITY = 76;
+
+/**
+ * Where a copy goes. The original's extension stays in the name, so shoot-10.jpg and
+ * shoot-10.webp in the same folder each get copies of their own.
+ */
+const copyOf = (rel, w) => path.join(sized, rel + '.' + w + '.webp');
 const RASTER = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif']);
 
 async function* walk(dir) {
@@ -54,12 +61,18 @@ async function run() {
     const rel = path.relative(images, file).split(path.sep).join('/');
     const { width, height } = await sharp(file).metadata();
     if (!width || !height) throw new Error('Cannot read the size of public/images/' + rel);
-    const widths = WIDTHS.filter((w) => w < width * 0.9);
+    // The smaller copies, and one at full width: the original is never sent as it is, since
+    // a photo straight off a camera or an export is often far larger than it needs to be.
+    const widths = [...WIDTHS.filter((w) => w < width * 0.9), width];
     for (const w of widths) {
-      const target = path.join(sized, rel.replace(/\.[^.]+$/, '') + '-' + w + '.webp');
+      const target = copyOf(rel, w);
       if (!(await newer(file, target))) continue;
       await mkdir(path.dirname(target), { recursive: true });
-      await sharp(file).resize({ width: w }).webp({ quality: 76 }).toFile(target);
+      const source = await readFile(file);
+      let copy = await sharp(source).resize({ width: w }).webp({ quality: QUALITY }).toBuffer();
+      // An original WebP already smaller than our copy is used as it is.
+      if (w === width && ext === '.webp' && source.length <= copy.length) copy = source;
+      await writeFile(target, copy);
       made += 1;
     }
     out[rel] = { width, height, widths };
