@@ -22,7 +22,7 @@ npm run figma         # built home page -> figma/index.html, one self-contained 
 ```
 
 **To change content or photos, see [UPDATING.md](UPDATING.md).** Live at
-https://g3-website-pi.vercel.app, deployed by Vercel from `main`.
+https://www.g3studiomumbai.com, deployed by Vercel from `main` of github.com/g3studiomumbai/Our-Website.
 
 ## What the client changed
 
