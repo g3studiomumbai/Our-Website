@@ -42,8 +42,8 @@ export const SHARE_IMAGE = '/images/share.jpg';
 export const SHARE_IMAGE_ALT =
   'The studio floor: a white backdrop beside a built set with steps';
 
-/** Day ₹1,000/hr, night ₹700/hr, 3-hour minimum, 50% advance. */
-export const RATE = { day: 1000, night: 700 } as const;
+/** Day ₹999/hr, night ₹699/hr, 3-hour minimum, 50% advance. */
+export const RATE = { day: 999, night: 699 } as const;
 /**
  * The offer for ad visitors: the strip at the top, the popup, and the struck-out day rate
  * in pricing. false takes all three off the page.
@@ -52,7 +52,7 @@ export const OFFER_ON = true;
 /** The client's struck-out day rate, shown above the real one. */
 export const DAY_RATE_WAS = 3500;
 /**
- * The saving the client advertises: "70% OFF — 3500 → 1000". ₹1,000 against ₹3,500 is
+ * The saving the client advertises: "70% OFF — 3500 → 999". ₹999 against ₹3,500 is
  * 71.4% off, so the rounder figure claims a little less than is true, never more.
  */
 export const DAY_OFF = 70;

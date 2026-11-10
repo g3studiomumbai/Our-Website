@@ -66,7 +66,7 @@ export function localBusinessSchema() {
     url: SITE_URL + '/',
     telephone: PHONE_SCHEMA,
     image: SITE_URL + SHARE_IMAGE,
-    priceRange: '₹700–₹1,000 per hour',
+    priceRange: '₹699–₹999 per hour',
     currenciesAccepted: 'INR',
     address: {
       '@type': 'PostalAddress',

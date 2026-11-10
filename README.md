@@ -182,7 +182,7 @@ Where this differs from their page, on purpose:
 - **The step cards share rows**, so the four lines start level whichever titles
   run to two lines, and each number is in the indigo.
 - **The prices line up.** The struck-out day rate and its saving sit on one row
-  above ₹1,000, and night's "30% less" on the same row above ₹700. In theirs the
+  above ₹999, and night's "30% less" on the same row above ₹699. In theirs the
   struck rate had a line of its own and pushed the day price down.
 - **Tags and the question card are square-cornered**, like every button.
 - **The questions keep their money-first order** (price, overtime,
@@ -382,7 +382,7 @@ listing (`MAPS_HREF` and `GEO` in `content/studio.ts`). No
 `aggregateRating` and no `review`: there are no reviews yet, and inventing them
 is a manual-action risk.
 
-Rates stay in crawlable text (`₹1,000`, `₹700`, the 3-hour minimum). The rate
+Rates stay in crawlable text (`₹999`, `₹699`, the 3-hour minimum). The rate
 transparency is the differentiator.
 
 ## Before it ships

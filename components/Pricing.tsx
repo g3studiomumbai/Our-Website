@@ -43,7 +43,7 @@ export function Pricing() {
                 Day
                 <span className="rate-time">7&nbsp;AM to 9&nbsp;PM</span>
               </p>
-              {/* The row stays when the offer is off, so ₹1,000 still lines up with ₹700. */}
+              {/* The row stays when the offer is off, so ₹999 still lines up with ₹699. */}
               <p className="rate-deal">
                 {OFFER_ON && (
                   <>

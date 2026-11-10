@@ -7,7 +7,7 @@ import { MoonIcon, SunIcon } from '@/components/icons';
 import { BookingLink, useBooking } from './BookingProvider';
 
 /**
- * The bill: day ₹1,000/hr, night ₹700/hr, 3-hour minimum, 50% advance.
+ * The bill: day ₹999/hr, night ₹699/hr, 3-hour minimum, 50% advance.
  *
  * Whatever gets priced here is written into the WhatsApp message, so a reply can go
  * straight to dates. Nothing is written until someone actually touches a control — the
