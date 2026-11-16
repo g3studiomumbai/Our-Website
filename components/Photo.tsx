@@ -1,30 +1,38 @@
 import type { ImgHTMLAttributes } from 'react';
 import photos from '@/lib/photos.generated.json';
 
-type Known = { width: number; height: number; widths: number[] };
+type Known = { width: number; height: number; widths: number[]; version: string };
 const PHOTOS = photos as Record<string, Known>;
 
-/** A photo's size and its smaller copies, by its path under public/images. */
+/**
+ * Where the photos are served from: the Cloudflare R2 bucket, at the studio's own address.
+ * scripts/images.mjs uploads them there.
+ */
+export const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL || 'https://images.g3studiomumbai.com';
+
+/** A photo's size and its copies, by its path under photos/, e.g. "hero/shoot-1.webp". */
 export function photo(src: string): Known {
   const known = PHOTOS[src];
   if (!known) {
-    throw new Error(
-      `No photo at public/images/${src}. Check the path in content/, then run npm run images.`,
-    );
+    throw new Error(`No photo at photos/${src}. Check the path in content/, then run npm run images.`);
   }
   return known;
 }
 
-/** The address of the photo as it was put in the folder. */
-export const photoUrl = (src: string) => '/images/' + src;
+/** Every photo in one folder of photos/, e.g. "props", in name order. */
+export const photosIn = (folder: string) =>
+  Object.keys(PHOTOS).filter((src) => src.startsWith(folder + '/'));
 
-/**
- * Every copy of the photo with its width, for srcset, the full-width one last. Copies are
- * named after the whole file name, as scripts/images.mjs makes them.
- */
+/** One copy's address. scripts/images.mjs names the copies the same way. */
+const copyUrl = (src: string, w: number) => `${IMAGES_URL}/${src}.${photo(src).version}.${w}.webp`;
+
+/** The largest copy: what a viewer shows full size, and the <img> fallback. */
+export const photoUrl = (src: string) => copyUrl(src, photo(src).width);
+
+/** Every copy of the photo with its width, for srcset, the largest last. */
 export function photoSrcSet(src: string): string {
   return photo(src)
-    .widths.map((w) => `/images/_sized/${src}.${w}.webp ${w}w`)
+    .widths.map((w) => `${copyUrl(src, w)} ${w}w`)
     .join(', ');
 }
 

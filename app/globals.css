@@ -1174,6 +1174,92 @@
     .viewer[open] .viewer-img { animation: pop 360ms var(--ease) }
   }
 
+  /* ---------- lights and props ----------
+     Two strips of square tiles, lights then props, running in opposite directions. Each
+     list is drawn twice, so sliding the track by half its width brings it back to where it
+     started without a seam. Under the mouse, or with a tile focused, the strip stops. */
+  .kit { padding: 96px 0; overflow: hidden }
+  .kit-copy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 48px;
+    padding: 0 var(--gutter);
+    margin-bottom: 48px;
+  }
+  .kit-title { margin: 0; font: 600 48px/1.1 var(--head); letter-spacing: -0.02em; color: var(--ink); text-wrap: balance }
+  .kit-text { max-width: 30em; margin: 0; font: 400 16px/26px var(--body); color: var(--copy); text-wrap: pretty }
+  .kit-row + .kit-row { margin-top: 24px }
+  .kit-label {
+    margin: 0 0 12px;
+    padding: 0 var(--gutter);
+    font: 600 13px/20px var(--body);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .kit-label span { margin-left: 6px; font-weight: 400; color: var(--ink-3) }
+  .kit-window { --tile: 140px; overflow: hidden }
+  .kit-track {
+    display: flex;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .kit-track li { flex: none; padding-right: 12px }
+  .kit-item {
+    display: block;
+    width: var(--tile);
+    height: var(--tile);
+    padding: 10px;
+    border: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--kit-tile);
+    cursor: zoom-in;
+  }
+  .kit-item img { display: block; width: 100%; height: 100%; object-fit: contain; transition: scale 400ms var(--ease) }
+  .kit-item:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px }
+  @media (hover: hover) {
+    .kit-item:hover img { scale: 1.08 }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .kit-track { animation: kit-run var(--kit-time, 60s) linear infinite }
+    .kit-row-back .kit-track { animation-direction: reverse }
+    .kit-window:hover .kit-track, .kit-window:focus-within .kit-track { animation-play-state: paused }
+  }
+  /* Still strips for anyone who asked for less motion: scroll them instead. */
+  @media (prefers-reduced-motion: reduce) {
+    .kit-window { overflow-x: auto; scrollbar-width: thin }
+    .kit-track { padding: 0 var(--gutter) }
+    .kit-copy-of { display: none }
+  }
+  @keyframes kit-run { to { translate: -50% 0 } }
+  .kit-figure { display: grid; justify-items: center; gap: 16px; margin: 0 }
+  .kit-viewer .viewer-img {
+    width: min(640px, 100%, calc(100dvh - 200px));
+    aspect-ratio: 1;
+    padding: 24px;
+    background: var(--kit-tile);
+    border-radius: 16px;
+    object-fit: contain;
+  }
+  .kit-figure figcaption { min-height: 24px; font: 500 16px/24px var(--body); color: var(--on-shade) }
+  @media (max-width: 1023px) {
+    .kit { padding-block: 72px }
+    .kit-title { font-size: 36px }
+    .kit-copy { margin-bottom: 32px }
+  }
+  @media (max-width: 640px) {
+    .kit { padding-block: 56px }
+    .kit-title { font-size: 28px }
+    .kit-window { --tile: 100px }
+    .kit-track li { padding-right: 8px }
+    .kit-item { padding: 6px; border-radius: 10px }
+  }
+
   /* ---------- pricing ----------
      Two rates and the bill on the client's lilac, and nothing in between. Each rate card
      says when on its first row and what it costs at its foot, the saving on one row above the

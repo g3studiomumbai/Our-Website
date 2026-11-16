@@ -41,9 +41,11 @@ Six rounds so far. The latest is first.
   each sent from the browser and from `app/api/meta` under one event ID. That route
   is why the site is now a normal Next.js build rather than a static export.
 - **Ad visitors skip the loader** (`fbclid`, `gclid`, `utm_` in the link).
-- **Phones get smaller photos.** Originals live in `public/images/<section>/`;
-  `scripts/images.mjs` makes 400/800/1200 copies before every build and
-  `components/Photo.tsx` offers them in `srcset`.
+- **Photos come from Cloudflare R2** (`images.g3studiomumbai.com`). Originals live in
+  `photos/<section>/` (not committed); `npm run images` (scripts/images.mjs) makes
+  400/800/1200/full copies — square trimmed tiles for lights and props — uploads them to
+  R2 with a fingerprint in each name, and writes the committed list
+  `lib/photos.generated.json`, which `components/Photo.tsx` turns into `srcset`.
 - **Content in one place:** `content/` holds the studio facts, hero, steps, sets,
   gallery and FAQ; `OFFER_ON` switches the offer off everywhere. See UPDATING.md.
 - "See more" now reads "See more shoots" (a link's text should say where it goes);
@@ -250,8 +252,9 @@ draws for a path it will not fetch. It roughly triples the file.
 
 ```
 content/            what the page says: studio (facts, rates, offer), hero, steps,
-                    sets, gallery, faq — see UPDATING.md
-public/images/      the photos, a folder per section; _sized/ is made by the build
+                    sets, gallery, kit (lights and props), faq — see UPDATING.md
+photos/             the original photos, a folder per section (not committed; in R2)
+public/images/      the drawn decor and the share picture
 app/
   layout.tsx        metadata, JSON-LD, fonts, the before-paint loader script, the curtain
   page.tsx          the home page: loader, offer, bar, the sections in order, footer

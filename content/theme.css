@@ -25,6 +25,8 @@
   --accent-soft: #F2F2F2;
   /* A stronger tint: the background of "How booking works". */
   --accent-mid: #E4E4E4;
+  /* Behind each light and prop cut-out. Light in both themes, so black gear stays visible. */
+  --kit-tile: #F2F2F2;
 
   /* ---- Text --------------------------------------------------------------------------
      --ink is the strongest text colour: headings, the solid buttons, the logo. The others
@@ -52,6 +54,7 @@
   --accent: #F2F2F2;
   --accent-soft: #1A1A1A;
   --accent-mid: #242424;
+  --kit-tile: #E6E6E6;
 
   --ink: #F2F2F2;
   --ink-2: #CFCFCF;

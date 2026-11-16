@@ -1,5 +1,6 @@
 'use client';
 
+import { FREE_LIGHTS } from '@/content/kit';
 import {
   useEffect,
   useRef,
@@ -268,7 +269,7 @@ export function Gallery() {
             Your shoot, next.
           </h2>
           <p className="g-end-line">
-            {`${inr(RATE.day)} an hour by day, ${inr(RATE.night)} by night. Lights, props and 2 backdrops included.`}
+            {`${inr(RATE.day)} an hour by day, ${inr(RATE.night)} by night. ${FREE_LIGHTS} lights, props and 2 backdrops included.`}
           </p>
           <div className="g-end-acts">
             <BookingLink className="btn btn-hero">Check available slots</BookingLink>

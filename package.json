@@ -6,7 +6,6 @@
     "images": "node scripts/images.mjs",
     "predev": "node scripts/images.mjs",
     "dev": "node scripts/dev.mjs",
-    "prebuild": "node scripts/images.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -18,10 +17,11 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1169.0",
     "@types/node": "22.18.1",
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
-    "typescript": "5.9.2",
-    "sharp": "0.34.5"
+    "sharp": "0.34.5",
+    "typescript": "5.9.2"
   }
 }

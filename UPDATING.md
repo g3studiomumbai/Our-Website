@@ -1,7 +1,7 @@
 # Updating the site
 
 Everything that changes — prices, phone, offer, photos, questions — lives in two
-places: the files in **`content/`** and the photos in **`public/images/`**. You
+places: the files in **`content/`** and the photos in **`photos/`**. You
 should never need to touch `components/` or `app/` to change what the page says.
 
 After any change: commit and push to `main`. Vercel builds and publishes it in
@@ -20,10 +20,11 @@ about a minute. To look first, run `npm run dev` and open http://localhost:3000.
 | The offer (₹3,500 → 70% off) | `content/studio.ts` → `DAY_RATE_WAS`, `DAY_OFF` |
 | Offer on / off | `content/studio.ts` → `OFFER_ON = false` hides the top strip, the popup (which opens once a visit, as the visitor scrolls past the hero) and the struck-out price |
 | Page title, Google description | `content/studio.ts` → `TITLE`, `DESCRIPTION` |
-| Hero photos (any number; the third starts in the middle) | `content/hero.ts` + `public/images/hero/` |
-| How booking works (4 steps) | `content/steps.ts` + `public/images/steps/` |
-| Sets strip | `content/sets.ts` + `public/images/sets/` |
-| Gallery page | Nothing: it shows every hero, set and booking-step photo by itself. For gallery-only photos, drop them in `public/images/gallery/` (and give each a description in `content/gallery.ts` → `GALLERY_ONLY`) |
+| Hero photos (any number; the third starts in the middle) | `content/hero.ts` + `photos/hero/` |
+| How booking works (4 steps) | `content/steps.ts` + `photos/steps/` |
+| Sets strip | `content/sets.ts` + `photos/sets/` |
+| Gallery page | Nothing: it shows every hero, set and booking-step photo by itself. For gallery-only photos, drop them in `photos/gallery/` (and give each a description in `content/gallery.ts` → `GALLERY_ONLY`) |
+| Lights and props strips | Nothing to list: every photo in `photos/lights/` and `photos/props/` shows by itself. Names (for Google and the viewer) in `content/kit.ts` → `NAMES`; free lights in `FREE_LIGHTS` |
 | Questions (FAQ) | `content/faq.ts` (also feeds Google's FAQ data) |
 | Share picture (WhatsApp/Facebook preview) | replace `public/images/share.jpg`, 1200 × 630 |
 | Brochure | save the PDF as `public/g3-studio-brochure.pdf` |
@@ -72,18 +73,51 @@ flipped to white on the dark theme.
 
 ## Adding or swapping a photo
 
-1. Put the original in the right folder under `public/images/` — as large as you
-   have it, JPG or WebP. Use a short lowercase name with dashes: `set-6.jpg`.
-2. Add (or change) its line in the matching `content/` file, with an `alt`: one
-   plain sentence saying what is in the picture. That is what Google Images and
-   screen readers read.
-3. Push. Smaller copies for phones are made automatically on every build
-   (`scripts/images.mjs`); you never make them by hand. While `npm run dev` is running,
-   a photo you drop in is picked up within a few seconds, without restarting it.
+The photos are kept in two places: the originals in **`photos/`** on this computer (not on
+GitHub, because they are large), and the copies the site shows in **Cloudflare R2**, served
+from `https://images.g3studiomumbai.com`. One command keeps the two in step.
 
-Shapes that fit: hero and sets are portrait **2:3** to **3:4**, with no white frame round the picture (it shows as a border inside the card), steps portrait **3:4**, the
-gallery takes any shape. A path that doesn't exist stops the build with a message
-naming it, so a typo can't go live as a broken image.
+1. Put the original in the right folder under `photos/` — as large as you have it, JPG,
+   PNG or WebP. Use a short name with no spaces: `set-22.jpg`.
+2. Hero, sets and steps: add (or change) its line in the matching `content/` file, with an
+   `alt` — one plain sentence saying what is in the picture. Lights, props and gallery
+   photos need no line; a name in `content/kit.ts` is optional.
+3. Run:
+
+   ```
+   npm run images
+   ```
+
+   It makes the smaller copies, uploads only the new or changed ones to R2, and updates
+   `lib/photos.generated.json` — the list of photos the site is built from. It ends with
+   "files uploaded to R2"; if it says "NOT uploaded", the keys in `.env.local` are missing.
+4. Push (the list goes with it). The site is live with the photo about two minutes later.
+
+While `npm run dev` is running, steps 3 happens by itself a few seconds after a photo is
+dropped in.
+
+**Push only after `npm run images` has uploaded.** The list says which copies to show; if it
+reaches the live site before the copies reach R2, those photos show as gaps.
+
+To remove a photo: delete it from `photos/` (and its line in `content/`), run
+`npm run images -- --prune` (which also clears its copies out of R2), and push.
+
+Shapes that fit: hero and sets are portrait **2:3** to **3:4**, with no white frame round
+the picture (it shows as a border inside the card), steps portrait **3:4**, the gallery takes
+any shape. Lights and props look best as cut-outs on a clear background: the empty space
+round them is trimmed off and each is centred in a square. A path in `content/` that
+doesn't exist stops the build with a message naming it, so a typo can't go live.
+
+### The R2 keys, and a new computer
+
+The upload uses the keys in **`.env.local`** (in this folder, never committed):
+`R2_ENDPOINT` (Cloudflare → R2 → g3-images → Settings → S3 API), `R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY` (from an R2 API token with Object Read & Write on g3-images) and
+`R2_BUCKET=g3-images`. Vercel needs none of them: it builds from the committed list.
+
+On another computer, `photos/` won't exist. The site still builds and runs (the photos
+come from R2); to add photos there, first copy the originals back from the bucket's
+`originals/` folder into `photos/`.
 
 ## Settings in Vercel (no code change)
 

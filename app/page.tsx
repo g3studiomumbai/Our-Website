@@ -7,6 +7,7 @@ import { Offer } from '@/components/client/Offer';
 import { SiteHeader } from '@/components/client/SiteHeader';
 import { Steps } from '@/components/Steps';
 import { Space } from '@/components/Space';
+import { Kit } from '@/components/client/Kit';
 import { Pricing } from '@/components/Pricing';
 import { Faq } from '@/components/Faq';
 import { BROCHURE_ASK_HREF, BROCHURE_PDF } from '@/lib/booking';
@@ -37,6 +38,7 @@ export default function Page() {
         <Hero brochure={brochure} />
         <Steps />
         <Space />
+        <Kit />
         <Pricing />
         <Faq />
       </main>

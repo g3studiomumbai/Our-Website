@@ -6,6 +6,7 @@ next-env.d.ts
 *.tsbuildinfo
 .env*.local
 
-# Made from public/images by scripts/images.mjs before every dev and build
-public/images/_sized/
-lib/photos.generated.json
+# The original photos (on this computer, and backed up in R2) and the copies made from
+# them by scripts/images.mjs. lib/photos.generated.json, the list of them, IS committed.
+photos/
+.cache/

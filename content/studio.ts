@@ -58,7 +58,7 @@ export const DAY_RATE_WAS = 3500;
 export const DAY_OFF = 70;
 /** What comes with every booking, day or night, as the pricing section lists it. */
 export const INCLUDED = [
-  'Full lighting gear',
+  '2 lights (more at extra cost)',
   '2 backdrops',
   'All props and furniture',
   'AC',

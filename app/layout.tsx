@@ -1,3 +1,4 @@
+import { IMAGES_URL } from '@/components/Photo';
 import type { Metadata, Viewport } from 'next';
 import {
   DESCRIPTION,
@@ -127,6 +128,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* The headline's face, which the bar shares, and the body's. The shoot in the middle, the largest thing
             in the first screen, is preloaded by React from its fetchPriority="high" <img>,
             srcset and all, so the copy fetched early is the copy it shows. */}
+        {/* The photos come from their own address: open the connection before they are asked for. */}
+        <link rel="preconnect" href={IMAGES_URL} />
         <link rel="preload" href="/fonts/montserrat.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="" />
         <script

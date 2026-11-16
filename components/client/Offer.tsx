@@ -1,5 +1,6 @@
 'use client';
 
+import { FREE_LIGHTS } from '@/content/kit';
 import { useEffect, useRef } from 'react';
 import { OFFER_HREF, inr } from '@/lib/booking';
 import { DAY_OFF, DAY_RATE_WAS, RATE, SHORTEST_BOOKING } from '@/lib/site';
@@ -153,7 +154,7 @@ export function Offer() {
               <span>/ hour</span>
             </p>
             <p className="offer-note">
-              {`7 AM to 9 PM · ${SHORTEST_BOOKING}-hour minimum · lights, props and 2 backdrops included`}
+              {`7 AM to 9 PM · ${SHORTEST_BOOKING}-hour minimum · ${FREE_LIGHTS} lights, props and 2 backdrops included`}
             </p>
             <a
               className="btn btn-offer"
