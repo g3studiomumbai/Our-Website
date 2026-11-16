@@ -66,10 +66,18 @@ export function Kit() {
 
       {ROWS.map(({ label, items }, r) => (
         <div className={'kit-row' + (r % 2 ? ' kit-row-back' : '')} key={label} data-rise>
-          <p className="kit-label">
-            {label} <span>{items.length}</span>
-          </p>
-          <div className="kit-window">
+          <p className="kit-label">{label}</p>
+          {/* The strip stops while a tile has keyboard focus. A mouse leaving the strip means
+              the reader has moved on, so the focus a click or the closed viewer left on a
+              tile is let go, and the strip runs again. A keyboard never fires this. */}
+          <div
+            className="kit-window"
+            onPointerLeave={(e) => {
+              if (e.pointerType === 'mouse' && e.currentTarget.contains(document.activeElement)) {
+                (document.activeElement as HTMLElement).blur();
+              }
+            }}
+          >
             <ul
               className="kit-track"
               aria-label={label}

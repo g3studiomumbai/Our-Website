@@ -1190,17 +1190,17 @@
   }
   .kit-title { margin: 0; font: 600 48px/1.1 var(--head); letter-spacing: -0.02em; color: var(--ink); text-wrap: balance }
   .kit-text { max-width: 30em; margin: 0; font: 400 16px/26px var(--body); color: var(--copy); text-wrap: pretty }
-  .kit-row + .kit-row { margin-top: 24px }
+  .kit-row + .kit-row { margin-top: 12px }
   .kit-label {
-    margin: 0 0 12px;
+    margin: 0 0 6px;
     padding: 0 var(--gutter);
     font: 600 13px/20px var(--body);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-2);
   }
-  .kit-label span { margin-left: 6px; font-weight: 400; color: var(--ink-3) }
-  .kit-window { --tile: 140px; overflow: hidden }
+  /* 6px above and below: room for a hovered tile to grow without being clipped. */
+  .kit-window { --tile: 140px; overflow: hidden; padding-block: 6px }
   .kit-track {
     display: flex;
     width: max-content;
@@ -1220,15 +1220,21 @@
     background: var(--kit-tile);
     cursor: zoom-in;
   }
-  .kit-item img { display: block; width: 100%; height: 100%; object-fit: contain; transition: scale 400ms var(--ease) }
+  .kit-item img { display: block; width: 100%; height: 100%; object-fit: contain }
   .kit-item:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px }
-  @media (hover: hover) {
-    .kit-item:hover img { scale: 1.08 }
-  }
   @media (prefers-reduced-motion: no-preference) {
+    .kit-item { transition: scale 400ms var(--ease) }
     .kit-track { animation: kit-run var(--kit-time, 60s) linear infinite }
     .kit-row-back .kit-track { animation-direction: reverse }
-    .kit-window:hover .kit-track, .kit-window:focus-within .kit-track { animation-play-state: paused }
+    /* Paused while a keyboard is on a tile. Not :focus-within: a clicked tile keeps focus
+       after the mouse has gone (and gets it back when the viewer closes), so the strip
+       stayed stopped until someone clicked elsewhere. */
+    .kit-window:has(.kit-item:focus-visible) .kit-track { animation-play-state: paused }
+  }
+  /* A real mouse only: a tap leaves :hover stuck on a phone, which would stop the strip. */
+  @media (hover: hover) {
+    .kit-item:hover { scale: 1.08 }
+    .kit-window:hover .kit-track { animation-play-state: paused }
   }
   /* Still strips for anyone who asked for less motion: scroll them instead. */
   @media (prefers-reduced-motion: reduce) {
